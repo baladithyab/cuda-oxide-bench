@@ -1,12 +1,15 @@
 // Raw CUDA C++ reference: naive matmul, identical algorithm to wgpu/cuda-oxide
 // 16x16 thread block, one output element per thread, NO shared memory tiling.
-// This is the "what speed of light looks like for this exact algorithm" baseline.
+// Wave 1 W1B: native sm_120 build + size sweep N in {1024, 2048, 4096}
+// Per ADR-0001 (cudaEvent timing), ADR-0002 (sm_120 native).
 #include <cstdio>
 #include <cstdlib>
 #include <cuda_runtime.h>
 
-#define N 4096
+#define MAXN 4096
 #define BS 16
+#define WARMUPS 1
+#define ITERS 10
 
 __global__ void matmul(const float* __restrict__ A, const float* __restrict__ B,
                        float* __restrict__ C, int dim) {
@@ -23,50 +26,132 @@ __global__ void matmul(const float* __restrict__ A, const float* __restrict__ B,
 #define CK(x) do { cudaError_t e = (x); if (e != cudaSuccess) { \
     fprintf(stderr, "CUDA: %s\n", cudaGetErrorString(e)); exit(1); } } while(0)
 
+// Reference on host for small spot-checks. For sub-matrix of size n from buffers
+// that were filled as if they were full MAXN-sized (we use top-left n-by-n slice
+// of the MAXN-sized host arrays, so reference must use stride n on those n x n
+// re-copies).
+static float ref_elem(const float* hA, const float* hB, int n, int row, int col) {
+    double acc = 0.0;
+    for (int k = 0; k < n; ++k) {
+        acc += (double)hA[row * n + k] * (double)hB[k * n + col];
+    }
+    return (float)acc;
+}
+
 int main() {
     cudaDeviceProp p; CK(cudaGetDeviceProperties(&p, 0));
     printf("[cuda] device: %s (sm_%d%d)\n", p.name, p.major, p.minor);
 
-    size_t bytes = (size_t)N * N * sizeof(float);
-    float *hA = (float*)malloc(bytes), *hB = (float*)malloc(bytes);
-    for (int i = 0; i < N*N; ++i) { hA[i] = (i % 7) * 0.01f; hB[i] = (i % 11) * 0.01f; }
+    const int NS[3] = {1024, 2048, 4096};
+    const size_t max_bytes = (size_t)MAXN * MAXN * sizeof(float);
+
+    // Allocate once for MAXN. For smaller N we reuse the top-left n x n sub-use,
+    // but we repack host arrays for each N so the stride matches the device
+    // kernel's stride (kernel uses stride = n).
+    float *hA = (float*)malloc(max_bytes);
+    float *hB = (float*)malloc(max_bytes);
+    float *hC = (float*)malloc(max_bytes);
 
     float *dA, *dB, *dC;
-    CK(cudaMalloc(&dA, bytes)); CK(cudaMalloc(&dB, bytes)); CK(cudaMalloc(&dC, bytes));
-    CK(cudaMemcpy(dA, hA, bytes, cudaMemcpyHostToDevice));
-    CK(cudaMemcpy(dB, hB, bytes, cudaMemcpyHostToDevice));
+    CK(cudaMalloc(&dA, max_bytes));
+    CK(cudaMalloc(&dB, max_bytes));
+    CK(cudaMalloc(&dC, max_bytes));
 
-    dim3 block(BS, BS), grid((N + BS - 1) / BS, (N + BS - 1) / BS);
+    cudaEvent_t evs, eve;
+    CK(cudaEventCreate(&evs));
+    CK(cudaEventCreate(&eve));
 
-    cudaEvent_t evs, eve; CK(cudaEventCreate(&evs)); CK(cudaEventCreate(&eve));
-    double total_flops = 2.0 * (double)N * N * N;
-    printf("[cuda] matmul %dx%d f32, %.2f GFLOP/iter\n", N, N, total_flops/1e9);
+    // CSV output
+    FILE* csv = fopen("cuda-matmul/results.csv", "w");
+    if (!csv) csv = fopen("results.csv", "w");
+    if (!csv) { fprintf(stderr, "cannot open results.csv\n"); return 1; }
+    fprintf(csv, "impl,kernel,N,iter,gpu_ms,tflops\n");
 
-    double best = 1e30, median;
-    double times[5];
-    // warmup
-    matmul<<<grid, block>>>(dA, dB, dC, N); CK(cudaDeviceSynchronize());
-    float ms;
-    cudaEventRecord(evs); matmul<<<grid, block>>>(dA, dB, dC, N); cudaEventRecord(eve);
-    cudaEventSynchronize(eve); cudaEventElapsedTime(&ms, evs, eve);
-    printf("[cuda] warmup: %.2f ms (%.3f TFLOPS)\n", ms, (total_flops/1e12)/(ms/1000.0));
-    for (int i = 0; i < 5; ++i) {
-        cudaEventRecord(evs);
-        matmul<<<grid, block>>>(dA, dB, dC, N);
-        cudaEventRecord(eve); cudaEventSynchronize(eve);
-        cudaEventElapsedTime(&ms, evs, eve);
-        times[i] = ms;
-        if (ms < best) best = ms;
-        printf("[cuda] iter %d: %.2f ms (%.3f TFLOPS)\n", i, ms, (total_flops/1e12)/(ms/1000.0));
+    // Per-N summary
+    double best_ms[3], median_ms[3], best_tf[3], median_tf[3];
+
+    for (int ni = 0; ni < 3; ++ni) {
+        int n = NS[ni];
+        size_t nbytes = (size_t)n * n * sizeof(float);
+        double flops = 2.0 * (double)n * n * n;
+
+        // Fill host arrays with stride == n (per-iter input pattern)
+        for (int i = 0; i < n * n; ++i) {
+            hA[i] = (i % 7) * 0.01f;
+            hB[i] = (i % 11) * 0.01f;
+        }
+        CK(cudaMemcpy(dA, hA, nbytes, cudaMemcpyHostToDevice));
+        CK(cudaMemcpy(dB, hB, nbytes, cudaMemcpyHostToDevice));
+        CK(cudaMemset(dC, 0, nbytes));
+
+        dim3 block(BS, BS);
+        dim3 grid((n + BS - 1) / BS, (n + BS - 1) / BS);
+
+        printf("[cuda] N=%d matmul f32, %.2f GFLOP/iter\n", n, flops / 1e9);
+
+        // warmup
+        for (int w = 0; w < WARMUPS; ++w) {
+            matmul<<<grid, block>>>(dA, dB, dC, n);
+        }
+        CK(cudaDeviceSynchronize());
+
+        double times[ITERS];
+        float ms;
+        for (int i = 0; i < ITERS; ++i) {
+            cudaEventRecord(evs);
+            matmul<<<grid, block>>>(dA, dB, dC, n);
+            cudaEventRecord(eve);
+            cudaEventSynchronize(eve);
+            cudaEventElapsedTime(&ms, evs, eve);
+            times[i] = ms;
+            double tflops = (flops / 1e12) / (ms / 1000.0);
+            printf("[cuda] N=%d iter=%d gpu_ms=%.3f tflops=%.3f\n", n, i, ms, tflops);
+            fprintf(csv, "cuda-matmul,matmul,%d,%d,%.6f,%.6f\n", n, i, ms, tflops);
+        }
+
+        // Correctness spot-check at (0,0), (n/2, n/2), (n-1, n-1)
+        CK(cudaMemcpy(hC, dC, nbytes, cudaMemcpyDeviceToHost));
+        int pts[3][2] = { {0, 0}, {n / 2, n / 2}, {n - 1, n - 1} };
+        int ok = 0;
+        for (int pi = 0; pi < 3; ++pi) {
+            int r = pts[pi][0], c = pts[pi][1];
+            float got = hC[r * n + c];
+            float want = ref_elem(hA, hB, n, r, c);
+            float rel = fabsf(got - want) / fmaxf(fabsf(want), 1e-6f);
+            const char* tag = (rel < 1e-3f) ? "OK" : "FAIL";
+            if (rel < 1e-3f) ok++;
+            printf("[cuda] N=%d check (%d,%d): got=%.4f want=%.4f rel=%.3e %s\n",
+                   n, r, c, got, want, rel, tag);
+        }
+        printf("[cuda] N=%d correctness: %d/3 OK\n", n, ok);
+
+        // sort times for median
+        double sorted[ITERS];
+        for (int i = 0; i < ITERS; ++i) sorted[i] = times[i];
+        for (int i = 0; i < ITERS; ++i)
+            for (int j = i + 1; j < ITERS; ++j)
+                if (sorted[j] < sorted[i]) {
+                    double t = sorted[i]; sorted[i] = sorted[j]; sorted[j] = t;
+                }
+        double bst = sorted[0];
+        double med = 0.5 * (sorted[ITERS/2 - 1] + sorted[ITERS/2]); // ITERS=10 → avg of 5th & 6th
+        best_ms[ni] = bst;
+        median_ms[ni] = med;
+        best_tf[ni] = (flops / 1e12) / (bst / 1000.0);
+        median_tf[ni] = (flops / 1e12) / (med / 1000.0);
     }
-    // sort for median
-    for (int i = 0; i < 5; ++i) for (int j = i+1; j < 5; ++j)
-        if (times[j] < times[i]) { double t = times[i]; times[i] = times[j]; times[j] = t; }
-    median = times[2];
-    printf("\n[cuda] BEST   %.2f ms  %.3f TFLOPS\n", best, (total_flops/1e12)/(best/1000.0));
-    printf("[cuda] MEDIAN %.2f ms  %.3f TFLOPS\n", median, (total_flops/1e12)/(median/1000.0));
 
+    // Summary table
+    printf("\n[cuda] ===== SUMMARY =====\n");
+    printf("[cuda] %6s  %10s  %10s  %10s  %10s\n", "N", "best_ms", "median_ms", "best_TF", "median_TF");
+    for (int ni = 0; ni < 3; ++ni) {
+        int n = NS[ni];
+        printf("[cuda] %6d  %10.3f  %10.3f  %10.3f  %10.3f\n",
+               n, best_ms[ni], median_ms[ni], best_tf[ni], median_tf[ni]);
+    }
+
+    fclose(csv);
     cudaFree(dA); cudaFree(dB); cudaFree(dC);
-    free(hA); free(hB);
+    free(hA); free(hB); free(hC);
     return 0;
 }
