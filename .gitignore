@@ -24,3 +24,4 @@ cuda-vecadd-bench/vecadd
 
 # Logs we want to keep are committed explicitly; ignore stray runs
 *.tmp
+/cuda-reduction/reduce
