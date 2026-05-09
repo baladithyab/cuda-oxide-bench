@@ -4,7 +4,11 @@ scenes/*.zip
 scenes/*.tar*
 # Build outputs
 target/
-# Don't commit per-camera PPMs, only the canonical output_real_C.ppm
+# Don't commit per-camera PPMs, only the canonical output_real_C.ppm and output_utsuho_plush.ppm
 output_real_A.ppm
 output_real_B.ppm
 output_real_D.ppm
+output_utsuho_plush_A.ppm
+output_utsuho_plush_B.ppm
+output_utsuho_plush_C.ppm
+output_utsuho_plush_D.ppm

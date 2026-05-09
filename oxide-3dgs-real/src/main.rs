@@ -506,7 +506,10 @@ fn render_cam(
 
 fn main() {
     let manifest = env!("CARGO_MANIFEST_DIR");
-    let ply_path = format!("{}/scenes/luigi.ply", manifest);
+    // Wave 10: canonical 3DGS plush-toy scene (Utsuho, 53k gaussians, SH deg 3,
+    // source: solaaaa/sample-gaussian-splats on HuggingFace).
+    let scene_name = "utsuho_plush";
+    let ply_path = format!("{}/scenes/{}.ply", manifest, scene_name);
     println!("Loading {}", ply_path);
     let raws = parse_ply(&ply_path);
     println!("Parsed {} gaussians", raws.len());
@@ -579,8 +582,8 @@ fn main() {
         fx, fy, cx: cx_p, cy: cy_p,
     };
 
-    render_cam(&ctx, &stream, &module, &raws, &cam_a, "camA_minusZ", &format!("{}/output_real_A.ppm", manifest));
-    render_cam(&ctx, &stream, &module, &raws, &cam_b, "camB_plusZ_noflip", &format!("{}/output_real_B.ppm", manifest));
-    render_cam(&ctx, &stream, &module, &raws, &cam_c, "camC_flipY", &format!("{}/output_real_C.ppm", manifest));
-    render_cam(&ctx, &stream, &module, &raws, &cam_d, "camD_roty180", &format!("{}/output_real_D.ppm", manifest));
+    render_cam(&ctx, &stream, &module, &raws, &cam_a, "camA_minusZ", &format!("{}/output_{}_A.ppm", manifest, scene_name));
+    render_cam(&ctx, &stream, &module, &raws, &cam_b, "camB_plusZ_noflip", &format!("{}/output_{}_B.ppm", manifest, scene_name));
+    render_cam(&ctx, &stream, &module, &raws, &cam_c, "camC_flipY", &format!("{}/output_{}_C.ppm", manifest, scene_name));
+    render_cam(&ctx, &stream, &module, &raws, &cam_d, "camD_roty180", &format!("{}/output_{}_D.ppm", manifest, scene_name));
 }

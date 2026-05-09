@@ -97,3 +97,34 @@ The kernel `rasterize_2dgs` is byte-identical to the one in
 conic, opacity, per-gaussian RGB). Only the host marshalling changed. This
 confirms the Wave-8 kernel is general enough to render real projected
 3DGS data with no kernel-side modification.
+
+## Wave 10: canonical Utsuho-plush render
+
+Extended the Wave-9 pipeline to render a second, richer scene with
+**no kernel changes** and only a one-line scene-path swap in `main.rs`.
+
+- **Scene**: `utsuho_plush.ply` — 13 MB, 53,671 gaussians, SH degree 3
+  (62 float props incl. `f_rest_0..44`).
+- **Source**: `solaaaa/sample-gaussian-splats` on HuggingFace
+  (`datasets/solaaaa/sample-gaussian-splats/resolve/main/Utsuho%20Plush/utsuho_plush.ply`).
+  Canonical 3DGS-format splat of a Touhou plush figurine — a clearly
+  recognizable real-world object scan.
+- **Bbox**: x∈[-0.97, 1.47], y∈[-2.15, 2.45], z∈[-2.59, 3.20], diag=7.79.
+  Centroid ≈ (0.18, 0.12, 0.18). Tall, upright figurine.
+- **Camera A (chosen)**: identity rotation, origin at
+  `(cx, cy, cz - diag*1.5) = (0.18, 0.12, -11.5)`, looking down +Z in
+  COLMAP convention. All 53,671 gaussians project, none culled,
+  depth range [8.92, 14.71].
+- **Render time (3-iter, cams A/C/D)**: 37.14 / 37.78 / 42.04 ms
+  (median 37.78 ms at 800×800, N=53,671). Cam B (+Z side) culls
+  everything, confirming COLMAP sign convention.
+- **Visual verdict**: recognizable — tall plush figurine at
+  approx. 384×203 px centered in frame, 21,759 distinct foreground
+  colors, warm-brown mean (102, 93, 68) consistent with Utsuho's
+  reddish-black plush coloring. SH degree 0 only (f_dc) used — the
+  `f_rest_0..44` SH bands are present in the PLY but not evaluated
+  yet. Basic render quality was already clearly recognizable so the
+  optional SH-3 stretch goal was skipped.
+- **Outputs**: `output_utsuho_plush.ppm` (= cam A), plus
+  `output_utsuho_plush_{A,C,D}.ppm` per-camera. PNG at
+  `/tmp/utsuho_plush.png`.
