@@ -28,6 +28,13 @@ Full scaling sweep — 7 `(impl, kernel)` configurations × N ∈ {1024, 2048, 4
 
 **→ See [SUMMARY.md](SUMMARY.md) for the full writeup**, or [`results/scaling-summary.md`](results/scaling-summary.md) for per-size best/median/p95 tables. The libNVVM correction is in [`docs/experiments/libnvvm-corrigendum.md`](docs/experiments/libnvvm-corrigendum.md). PTX-level deltas in per-folder `ANALYSIS.md` files. SASS-level deep-dive in [`docs/experiments/sass-analysis.md`](docs/experiments/sass-analysis.md).
 
+## Wave 7-8: closing the gap + 3D Gaussian Splatting
+
+- **Wave 7 — register microtile + fmuladd:** [`oxide-matmul-tiled-microtile/`](oxide-matmul-tiled-microtile/) implements a 4×4 register microtile in cuda-oxide. **At N=1024: 27-28 TFLOPS, matching nvcc-tiled (24.5 TF).** At N=4096: 16-17 TF vs nvcc 28 TF (60%, gap halved from old oxide-tiled).
+- **Wave 8 — rudimentary 3DGS rasterizer:** [`oxide-3dgs-mini/`](oxide-3dgs-mini/) ports a forward 2D Gaussian Splatting rasterizer (256×256 image, 512 gaussians, alpha-blend with early-exit) to cuda-oxide. Builds and runs at 75 µs/frame. cuda-oxide handles a complex 12-arg kernel cleanly. Rendered PPM saved.
+
+**Notable surprise**: libNVVM **does** contract plain `*+` to FFMA in some kernels (3DGS's per-pixel kernel; the `_safe` variant in Wave 7's tiled-microtile). Wave 3's "FastmathFlags::empty() blocks contraction" finding may be specific to runtime-bounded inner loops, not universal. Worth re-investigating.
+
 ## Wave 4-6 follow-up findings (additional kernel classes + advanced features)
 
 Beyond matmul we ran reduction, memory-bandwidth, and three of cuda-oxide's bundled advanced examples. Highlights:

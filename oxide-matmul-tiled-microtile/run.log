@@ -1,0 +1,80 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-matmul-tiled-microtile
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-matmul-tiled-microtile...
+
+   Compiling oxide-matmul-tiled-microtile v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-matmul-tiled-microtile)
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4_safe::TILE_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:190:17
+    |
+190 |                 TILE_A[idx] = v;
+    |                 ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4_safe::TILE_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:203:17
+    |
+203 |                 TILE_B[idx] = v;
+    |                 ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4_safe::TILE_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:216:22
+    |
+216 |                 a0 = TILE_A[(ty4 + 0) * 16 + k];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4_safe::TILE_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:220:22
+    |
+220 |                 b0 = TILE_B[k * 64 + tx4 + 0];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4::TILE_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+  --> src/main.rs:75:17
+   |
+75 |                 TILE_A[idx] = v;
+   |                 ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4::TILE_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+  --> src/main.rs:88:17
+   |
+88 |                 TILE_B[idx] = v;
+   |                 ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4::TILE_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:101:22
+    |
+101 |                 a0 = TILE_A[(ty4 + 0) * 16 + k];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_matmul_tiled_4x4::TILE_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:105:22
+    |
+105 |                 b0 = TILE_B[k * 64 + tx4 + 0];
+    |                      ^^^^^^
+
+warning: `oxide-matmul-tiled-microtile` (bin "oxide-matmul-tiled-microtile") generated 8 warnings
+    Finished `release` profile [optimized] target(s) in 0.75s
+     Running `target/release/oxide-matmul-tiled-microtile`
+[oxide-tiled-microtile] sizes=[1024, 4096] warmup=1 iters=3 (noisy: user gaming)
+---- N = 1024 ----
+[fmuladd] N=1024 iter=0 gpu_ms=0.921 tflops=2.333
+[fmuladd] N=1024 iter=1 gpu_ms=0.077 tflops=27.754
+[fmuladd] N=1024 iter=2 gpu_ms=0.074 tflops=28.864
+[fmuladd] N=1024 correctness 3/3
+[safe] N=1024 iter=0 gpu_ms=0.087 tflops=24.691
+[safe] N=1024 iter=1 gpu_ms=0.082 tflops=26.123
+[safe] N=1024 iter=2 gpu_ms=0.084 tflops=25.430
+[safe] N=1024 correctness 3/3
+---- N = 4096 ----
+[fmuladd] N=4096 iter=0 gpu_ms=8.312 tflops=16.535
+[fmuladd] N=4096 iter=1 gpu_ms=8.498 tflops=16.173
+[fmuladd] N=4096 iter=2 gpu_ms=8.061 tflops=17.050
+[fmuladd] N=4096 correctness 3/3
+[safe] N=4096 iter=0 gpu_ms=9.213 tflops=14.918
+[safe] N=4096 iter=1 gpu_ms=5.735 tflops=23.966
+[safe] N=4096 iter=2 gpu_ms=7.720 tflops=17.803
+[safe] N=4096 correctness 3/3

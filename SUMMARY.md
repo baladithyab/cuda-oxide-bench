@@ -94,6 +94,18 @@ We tried to run three of cuda-oxide's bundled advanced examples on our RTX 5090 
 
 The Phase 8 review flagged that the libNVVM corrigendum confounded two variables: libNVVM version (7.0.1 → 22.0.0) AND target arch (compute_89 → compute_120). We attempted to isolate them by forcing `CUDA_OXIDE_TARGET=sm_89` with the modern libNVVM. Result: modern libNVVM 22.0.0 **rejects rustc-codegen-cuda's IR for any arch ≤ sm_100** with `(13, 30): parse expected type` — a parse error on opaque pointers. The two variables are mechanically coupled in this toolchain; the experiment cannot be run as designed. **Implication for cuda-oxide:** the modern compiler frontend cannot target Ampere-or-earlier GPUs without rustc-codegen-cuda IR changes. This is a previously-undocumented portability constraint. See [`docs/experiments/libnvvm-causal-isolation.md`](docs/experiments/libnvvm-causal-isolation.md).
 
+## Wave 7: closing the matmul gap (register microtile + fmuladd)
+
+[`oxide-matmul-tiled-microtile/`](oxide-matmul-tiled-microtile/) — Wave 7 implements a 16×16-block + 4×4-register-microtile cuda-oxide tiled matmul. **Result: at N=1024 cuda-oxide hits 27-28 TFLOPS, matching or slightly exceeding nvcc-tiled (24.5 TF).** A 3.0-3.6× lift over the old oxide-tiled (9.1 TF). At N=4096 the gap halves to ~60% of nvcc (16-17 TF vs 28 TF), residual primarily due to thread-block geometry (nvcc uses 32×32+4×4 = 128×128 output/block; cuda-oxide here is 16×16+4×4 = 64×64).
+
+**Surprise**: libNVVM **does** contract `*+` to FFMA in tiled kernels (128 FFMAs in `_safe`), and in 3DGS too. Wave 3's "FastmathFlags::empty() blocks contraction" finding was specific to runtime-bounded loops — not universal. Re-investigation pending.
+
+## Wave 8: rudimentary 2D Gaussian Splatting in cuda-oxide
+
+[`oxide-3dgs-mini/`](oxide-3dgs-mini/) — Wave 8 ports a forward-only 2D Gaussian Splatting rasterizer to cuda-oxide as a complexity stress-test. 256×256 image, 512 gaussians, per-pixel kernel iterates all gaussians with front-to-back alpha-blend and early-exit on transmittance < 1e-4. **Builds and runs cleanly: 75 µs/frame, ~9 TFLOPS effective on the work that ran.**
+
+Verdict: **cuda-oxide handled the kernel cleanly.** 12-arg kernel signature with mixed `&[f32]` / `DisjointSlice<f32>` / `u32`, `core::intrinsics::expf32` lowers through libdevice to hardware MUFU.EX2, multi-branch early-exit produces sane SASS. No API friction. Rendered output saved as `oxide-3dgs-mini/output.ppm`.
+
 ## Compiler gap deep-dive
 
 Two separate effects compound to produce the cuda-oxide vs nvcc gap:

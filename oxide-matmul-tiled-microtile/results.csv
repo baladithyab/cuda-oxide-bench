@@ -1,0 +1,13 @@
+impl,kernel,N,iter,gpu_ms,tflops
+oxide-tiled-microtile,fmuladd,1024,0,0.921,2.333
+oxide-tiled-microtile,fmuladd,1024,1,0.077,27.754
+oxide-tiled-microtile,fmuladd,1024,2,0.074,28.864
+oxide-tiled-microtile,safe,1024,0,0.087,24.691
+oxide-tiled-microtile,safe,1024,1,0.082,26.123
+oxide-tiled-microtile,safe,1024,2,0.084,25.430
+oxide-tiled-microtile,fmuladd,4096,0,8.312,16.535
+oxide-tiled-microtile,fmuladd,4096,1,8.498,16.173
+oxide-tiled-microtile,fmuladd,4096,2,8.061,17.050
+oxide-tiled-microtile,safe,4096,0,9.213,14.918
+oxide-tiled-microtile,safe,4096,1,5.735,23.966
+oxide-tiled-microtile,safe,4096,2,7.720,17.803
