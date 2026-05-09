@@ -1,0 +1,18 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-matmul
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-matmul...
+
+   Compiling oxide-matmul v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-matmul)
+    Finished `release` profile [optimized] target(s) in 0.70s
+     Running `target/release/oxide-matmul`
+
+thread 'main' (334027) panicked at src/main.rs:247:59:
+load: Nvvm(Call { operation: "nvvmCompileProgram", code: 7, log: Some("libnvvm : error: -arch=compute_120 is an unsupported option") })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Failed with exit code: Some(101)

@@ -22,7 +22,7 @@ Repo: <https://github.com/baladithyab/cuda-oxide-bench> @ `<COMMIT_HASH_TBD>`. A
 - `crates/mir-lower/src/convert/ops/arithmetic.rs:97-102` — `add_fastmath_flags` always constructs `FastmathFlagsAttr::default()`.
 - `crates/dialect-llvm/src/attributes.rs:121-124` — `impl Default for FastmathFlagsAttr` returns `FastmathFlags::empty()`.
 - Other FMF callsites pass the same default: `arithmetic.rs:122, 148, 174, 200, 227, 542`; `cast.rs:453`; `dialect-llvm/src/ops/comparison.rs:209`.
-- `crates/mir-lower/src/convert/ops/call.rs:269-270` — `FmuladdF32`/`FmuladdF64` (i.e. `f32::mul_add`, `core::intrinsics::fmuladdf32`) lower to libdevice `__nv_fmaf`/`__nv_fma` instead of `llvm.fmuladd.*`, so the user-visible escape hatch also doesn't produce contractable IR.
+- `crates/mir-lower/src/convert/ops/call.rs:269-270` — `FmuladdF32`/`FmuladdF64` (i.e. `f32::mul_add`, `core::intrinsics::fmuladdf32`) lower to libdevice `__nv_fmaf`/`__nv_fma` rather than `llvm.fmuladd.*`. **Empirically this DOES still produce hardware FMA** in the final SASS, because libdevice's `__nv_fmaf` body itself contains `fma.rn.f32` and nvJitLink resolves the call at module load. We verified this by inspecting post-link PTX of the `matmul_fmuladd` kernel (`docs/experiments/fma-toggle.md`); the kernel emits 3 `fma.rn.f32` instructions per iteration of the unrolled loop. So `core::intrinsics::fmuladdf32` IS a working escape hatch today. The remaining issue is that **default `*+` chains still don't fuse** because of the FastmathFlags::default() above — making explicit FMA the only path, when it should also be the default.
 
 **Perf consequence** (RTX 5090, sm_120 native, `cudaEvent` timing, 10 iters, median):
 

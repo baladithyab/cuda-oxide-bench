@@ -45,10 +45,14 @@ The WSL2 VM exposes `/dev/dxg` (DirectX to CUDA passthrough) but no native Vulka
 ## Repo layout
 
 - [`oxide-vecadd/`](oxide-vecadd/) — end-to-end smoke test (1024-element vector add) to verify the cuda-oxide toolchain works — [ANALYSIS.md](oxide-vecadd/ANALYSIS.md)
-- [`oxide-matmul/`](oxide-matmul/) — main cuda-oxide benchmark with both safe and unchecked kernels, 10 timed iterations — [ANALYSIS.md](oxide-matmul/ANALYSIS.md)
-- [`cuda-matmul/`](cuda-matmul/) — nvcc CUDA C++ reference baseline, `cudaEventRecord`-timed, 5 iterations — [ANALYSIS.md](cuda-matmul/ANALYSIS.md)
+- [`oxide-matmul/`](oxide-matmul/) — naive cuda-oxide matmul (safe + unchecked + fmuladd kernels), 10 timed iterations × 3 sizes — [ANALYSIS.md](oxide-matmul/ANALYSIS.md)
+- [`oxide-matmul-tiled/`](oxide-matmul-tiled/) — cuda-oxide tiled matmul (SharedArray, safe + unchecked) — [ANALYSIS.md](oxide-matmul-tiled/ANALYSIS.md)
+- [`cuda-matmul/`](cuda-matmul/) — naive nvcc CUDA C++ reference, `cudaEventRecord`-timed — [ANALYSIS.md](cuda-matmul/ANALYSIS.md)
+- [`cuda-matmul-tiled/`](cuda-matmul-tiled/) — register-tiled nvcc CUDA C++ (32×32 block + 4×4 microtile) — [ANALYSIS.md](cuda-matmul-tiled/ANALYSIS.md)
+- [`cublas-matmul/`](cublas-matmul/) — cuBLAS sgemm reference (`CUBLAS_PEDANTIC_MATH`) — [ANALYSIS.md](cublas-matmul/ANALYSIS.md)
 - [`wgpu-matmul/`](wgpu-matmul/) — wgpu/WGSL portable fallback, demonstrates the WSL2 Vulkan-passthrough limitation — [ANALYSIS.md](wgpu-matmul/ANALYSIS.md)
-- [`analysis/`](analysis/) — PTX instruction counts and compiler-level explanation of the deltas ([`ptx-stats.txt`](analysis/ptx-stats.txt))
+- [`docs/`](docs/) — research reports, ADRs, experiment writeups, upstream issue draft
+- [`results/`](results/) — master scaling.csv (240 rows) + scaling-summary.md
 - [`system-info/`](system-info/) — full hardware / driver / toolchain dump ([`system-spec.txt`](system-info/system-spec.txt))
 
 ## Quick start
@@ -68,7 +72,7 @@ Each of the four benchmarks lives in its own folder with its own run command:
 
 **REMEMBER:** before any `cargo oxide` command, set `CUDA_HOME=/usr/local/cuda` so cuda-oxide loads the correct libNVVM. See [SETUP.md](SETUP.md) Step 4 for details.
 
-Full toolchain installation (LLVM 21, Rust nightly, CUDA 12.x, cargo-oxide) is in [SETUP.md](SETUP.md).
+Full toolchain installation (LLVM 21, Rust nightly, CUDA 13.2, cargo-oxide) is in [SETUP.md](SETUP.md).
 
 ## Cross-references
 
