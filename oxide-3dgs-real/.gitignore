@@ -4,6 +4,11 @@ scenes/*.zip
 scenes/*.tar*
 # Build outputs
 target/
+*.cubin
+*.ll
+*.ltoir
+*.ptx
+*.sass
 # Don't commit per-camera PPMs, only the canonical output_real_C.ppm and output_utsuho_plush.ppm
 output_real_A.ppm
 output_real_B.ppm

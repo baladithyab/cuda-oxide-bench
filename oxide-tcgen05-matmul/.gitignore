@@ -1,3 +1,7 @@
-/target
-/Cargo.lock
+target/
+*.cubin
 *.ll
+*.ltoir
+*.sass
+# NOTE: oxide_tcgen05_matmul.ptx is tracked as evidence — Wave 6 builds for
+# sm_100a but cannot run on RTX 5090 (sm_120); the PTX on disk is the proof.
