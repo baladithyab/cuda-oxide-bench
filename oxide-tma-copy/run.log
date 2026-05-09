@@ -1,0 +1,104 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-tma-copy
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-tma-copy...
+
+    Updating git repository `https://github.com/NVlabs/cuda-oxide.git`
+     Locking 8 packages to latest Rust 1.96.0-nightly compatible versions
+      Adding cuda-bindings v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding cuda-core v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding cuda-device v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding cuda-host v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding cuda-macros v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding libnvvm-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding nvjitlink-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+      Adding reserved-oxide-symbols v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling glob v0.3.3
+   Compiling libc v0.2.184
+   Compiling prettyplease v0.2.37
+   Compiling cfg-if v1.0.4
+   Compiling memchr v2.8.0
+   Compiling minimal-lexical v0.2.1
+   Compiling regex-syntax v0.8.10
+   Compiling libloading v0.8.9
+   Compiling bindgen v0.71.1
+   Compiling nom v7.1.3
+   Compiling either v1.15.0
+   Compiling itertools v0.13.0
+   Compiling bitflags v2.11.0
+   Compiling clang-sys v1.8.1
+   Compiling rustc-hash v2.1.2
+   Compiling shlex v1.3.0
+   Compiling regex-automata v0.4.14
+   Compiling syn v2.0.117
+   Compiling log v0.4.29
+   Compiling thiserror v2.0.18
+   Compiling anyhow v1.0.102
+   Compiling cexpr v0.6.0
+   Compiling zerocopy v0.8.48
+   Compiling reserved-oxide-symbols v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling regex v1.12.3
+   Compiling thiserror-impl v2.0.18
+   Compiling zerocopy-derive v0.8.48
+   Compiling cuda-macros v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling nvjitlink-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling libnvvm-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling cuda-device v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling cuda-bindings v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling half v2.7.1
+   Compiling cuda-core v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling cuda-host v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#9822c760)
+   Compiling oxide-tma-copy v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-tma-copy)
+warning: `static mut cuda_oxide_kernel_246e25db_tma_copy_2d_test::TILE` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+  --> src/main.rs:80:17
+   |
+80 |                 &raw mut TILE as *mut u8,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tma_copy_2d_test::TILE` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:113:28
+    |
+113 |         let val = unsafe { TILE[idx] };
+    |                            ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tma_pipeline_test::TILE` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:147:41
+    |
+147 |             cp_async_bulk_tensor_2d_g2s(&raw mut TILE as *mut u8, tensor_map, 0, 0, &raw mut BAR);
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `oxide-tma-copy` (bin "oxide-tma-copy") generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 1m 12s
+     Running `target/release/oxide-tma-copy`
+=== TMA Copy Example ===
+
+GPU Compute Capability: sm_120
+Loading PTX from: /home/codeseys/cuda-oxide-bench/oxide-tma-copy/oxide_tma_copy.ptx
+✓ PTX loaded successfully
+
+--- Test 1: TMA Copy (tma_copy_2d_test) ---
+
+1. Allocating 256x256 tensor (65536 floats, 256 KB)
+2. Creating TMA descriptor (tile: 64x64)
+3. Launching tma_copy_2d_test kernel...
+4. Verifying results...
+   ✓ All 4096 values match!
+
+🎉 TMA copy successful!
+
+--- Test 2: TMA Pipeline (tma_pipeline_test) ---
+
+1. Launching tma_pipeline_test kernel (tile: 32x32)...
+2. Verifying results...
+   ✓ All 256 threads completed successfully!
+
+🎉 TMA pipeline test successful!
+
+=== TMA Copy Test Complete ===

@@ -1,0 +1,19 @@
+[package]
+name = "oxide-tcgen05-matmul"
+version = "0.1.0"
+edition = "2024"
+authors = ["Nihal Pasham <nihalp@nvidia.com>"]
+license = "Apache-2.0"
+
+# Mark as standalone crate (not part of parent workspace)
+[workspace]
+
+# SM100+ tcgen05 matmul using TMA and pre-tiled input.
+# Build with:
+#   cargo oxide run oxide-tcgen05-matmul
+
+[dependencies]
+cuda-device = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-host = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-core = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+half = "2.4"

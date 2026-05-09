@@ -1,0 +1,78 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-tcgen05-matmul
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-tcgen05-matmul...
+
+   Compiling oxide-tcgen05-matmul v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-tcgen05-matmul)
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::TMEM_ADDR` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:106:27
+    |
+106 |             tcgen05_alloc(&raw mut TMEM_ADDR as *mut u32, 512);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::TMEM_ADDR` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:109:38
+    |
+109 |         let tmem_addr = *(&raw const TMEM_ADDR as *const u32);
+    |                                      ^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:114:17
+    |
+114 |                 &raw mut SMEM_A as *mut u8,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:121:17
+    |
+121 |                 &raw mut SMEM_B as *mut u8,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_A` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:135:42
+    |
+135 |             let smem_a_addr = &raw const SMEM_A as u64;
+    |                                          ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_B` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:136:42
+    |
+136 |             let smem_b_addr = &raw const SMEM_B as u64;
+    |                                          ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_OUT` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:188:36
+    |
+188 |                 let smem_addr_lo = (&raw mut SMEM_OUT as *mut u8)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_tcgen05_matmul_128x128_tiled::SMEM_OUT` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:210:43
+    |
+210 |             *out.get_unchecked_mut(idx) = SMEM_OUT[idx];
+    |                                           ^^^^^^^^
+
+warning: `oxide-tcgen05-matmul` (bin "oxide-tcgen05-matmul") generated 8 warnings
+    Finished `release` profile [optimized] target(s) in 0.74s
+     Running `target/release/oxide-tcgen05-matmul`
+=== Unified tcgen05 Matmul Example ===
+
+GPU Compute Capability: sm_120
+
+Loading PTX from: /home/codeseys/cuda-oxide-bench/oxide-tcgen05-matmul/tcgen05_matmul.ptx
+
+⚠️  tcgen05 (5th gen tensor cores) requires sm_100 (datacenter Blackwell only).
+   Your GPU is sm_120 (consumer Blackwell has no tcgen05).
+   PTX was generated successfully; run on sm_100 to execute kernels.
+
+📝 PTX Verification:
+   PTX file generated at: /home/codeseys/cuda-oxide-bench/oxide-tcgen05-matmul/tcgen05_matmul.ptx
+
+📝 To inspect generated PTX:
+   cat /home/codeseys/cuda-oxide-bench/oxide-tcgen05-matmul/tcgen05_matmul.ptx
+
+   Look for: tcgen05.mma instructions

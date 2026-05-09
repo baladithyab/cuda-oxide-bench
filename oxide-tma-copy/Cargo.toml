@@ -1,0 +1,18 @@
+[package]
+name = "oxide-tma-copy"
+version = "0.1.0"
+edition = "2024"
+authors = ["Nihal Pasham <nihalp@nvidia.com>"]
+license = "Apache-2.0"
+
+# Mark as standalone crate (not part of parent workspace)
+[workspace]
+
+# SM90+ TMA (Tensor Memory Accelerator) example.
+# Build with:
+#   cargo oxide run oxide-tma-copy
+
+[dependencies]
+cuda-device = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-host = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-core = { git = "https://github.com/NVlabs/cuda-oxide.git" }
