@@ -1,0 +1,10 @@
+# Scene data (large .ply files)
+scenes/*.ply
+scenes/*.zip
+scenes/*.tar*
+# Build outputs
+target/
+# Don't commit per-camera PPMs, only the canonical output_real_C.ppm
+output_real_A.ppm
+output_real_B.ppm
+output_real_D.ppm
