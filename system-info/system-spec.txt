@@ -1,0 +1,271 @@
+=== Date ===
+Sat May  9 06:10:53 UTC 2026
+
+=== uname ===
+Linux DESKTOP-CP4EDJH 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+=== /etc/os-release ===
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.4 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+
+=== lscpu ===
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        48 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               8
+On-line CPU(s) list:                  0-7
+Vendor ID:                            AuthenticAMD
+Model name:                           AMD Ryzen 7 7700X 8-Core Processor
+CPU family:                           25
+Model:                                97
+Thread(s) per core:                   2
+Core(s) per socket:                   4
+Socket(s):                            1
+Stepping:                             2
+BogoMIPS:                             8982.93
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512_bf16 clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm
+Virtualization:                       AMD-V
+Hypervisor vendor:                    Microsoft
+Virtualization type:                  full
+L1d cache:                            128 KiB (4 instances)
+L1i cache:                            128 KiB (4 instances)
+L2 cache:                             4 MiB (4 instances)
+L3 cache:                             32 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-7
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Not affected
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Vulnerable: Safe RET, no microcode
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+=== /proc/meminfo (head) ===
+MemTotal:       16378080 kB
+MemFree:         3598860 kB
+MemAvailable:   14430788 kB
+Buffers:          254624 kB
+Cached:         10266852 kB
+
+=== nvidia-smi ===
+Fri May  8 23:10:53 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.58.03              Driver Version: 596.21         CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5090        On  |   00000000:01:00.0  On |                  N/A |
+| 30%   44C    P1             80W /  575W |    4434MiB /  32607MiB |     12%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+=== nvidia-smi -q (driver+vbios) ===
+
+==============NVSMI LOG==============
+
+Timestamp                                              : Fri May  8 23:10:53 2026
+Driver Version                                         : 596.21
+CUDA Version                                           : 13.2
+
+Attached GPUs                                          : 1
+GPU 00000000:01:00.0
+    Product Name                                       : NVIDIA GeForce RTX 5090
+    Product Brand                                      : GeForce
+    Product Architecture                               : Blackwell
+    Display Mode                                       : Requested functionality has been deprecated
+    Display Attached                                   : Yes
+    Display Active                                     : Enabled
+    Persistence Mode                                   : Enabled
+    Addressing Mode                                    : N/A
+    MIG Mode
+        Current                                        : N/A
+        Pending                                        : N/A
+    Accounting Mode                                    : Disabled
+    Accounting Mode Buffer Size                        : 4000
+    Driver Model
+        Current                                        : WDDM
+        Pending                                        : WDDM
+    Serial Number                                      : 1792925049863
+    GPU UUID                                           : GPU-ae899af4-cfb2-ea2b-ed65-4a7432a03957
+    GPU PDI                                            : 0x69add1d2a1ad9f0a
+    Minor Number                                       : N/A
+    VBIOS Version                                      : 98.02.2e.00.03
+    MultiGPU Board                                     : No
+    Board ID                                           : 0x100
+    Board Part Number                                  : 900-1G144-2530-000
+    GPU Part Number                                    : 2B85-300-A1
+    FRU Part Number                                    : N/A
+    Platform Info
+        Chassis Serial Number                          : 
+        Slot Number                                    : 0
+        Tray Index                                     : 0
+        Host ID                                        : 1
+
+=== /dev/dxg present? ===
+ls: cannot access '/dev/nvidia*': No such file or directory
+crw-rw-rw- 1 root root 10, 125 May  7 21:46 /dev/dxg
+
+=== rustc / cargo ===
+rustc 1.88.0 (6b00bc388 2025-06-23)
+cargo 1.88.0 (873a06493 2025-05-10)
+Default host: x86_64-unknown-linux-gnu
+rustup home:  /home/codeseys/.rustup
+
+installed toolchains
+--------------------
+stable-x86_64-unknown-linux-gnu (active, default)
+nightly-x86_64-unknown-linux-gnu
+nightly-2026-04-03-x86_64-unknown-linux-gnu
+
+active toolchain
+----------------
+name: stable-x86_64-unknown-linux-gnu
+active because: it's the default toolchain
+installed targets:
+  x86_64-unknown-linux-gnu
+
+=== nightly toolchain components ===
+cargo-x86_64-unknown-linux-gnu
+clippy-x86_64-unknown-linux-gnu
+llvm-tools-x86_64-unknown-linux-gnu
+rust-docs-x86_64-unknown-linux-gnu
+rust-src
+rust-std-x86_64-unknown-linux-gnu
+rustc-x86_64-unknown-linux-gnu
+rustc-dev-x86_64-unknown-linux-gnu
+rustfmt-x86_64-unknown-linux-gnu
+
+=== llvm-21 ===
+Ubuntu LLVM version 21.1.8
+  Optimized build.
+  Default target: x86_64-pc-linux-gnu
+  Host CPU: znver4
+
+  Registered Targets:
+    aarch64     - AArch64 (little endian)
+    aarch64_32  - AArch64 (little endian ILP32)
+    aarch64_be  - AArch64 (big endian)
+    amdgcn      - AMD GCN GPUs
+Ubuntu clang version 21.1.8 (++20251221032922+2078da43e25a-1~exp1~20251221153059.70)
+Target: x86_64-pc-linux-gnu
+
+=== nvcc ===
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Fri_Jan__6_16:45:21_PST_2023
+Cuda compilation tools, release 12.0, V12.0.140
+Build cuda_12.0.r12.0/compiler.32267302_0
+
+=== libcuda + libnvvm ===
+lrwxrwxrwx 1 root root       12 Apr 29 23:55 /usr/local/cuda/nvvm/lib64/libnvvm.so -> libnvvm.so.4
+lrwxrwxrwx 1 root root       16 Apr 29 23:55 /usr/local/cuda/nvvm/lib64/libnvvm.so.4 -> libnvvm.so.4.0.0
+-rwxr-xr-x 1 root root 64632576 Apr 29 23:55 /usr/local/cuda/nvvm/lib64/libnvvm.so.4.0.0
+-r-xr-xr-x 4 root root   183752 Apr 13 14:30 /usr/lib/wsl/lib/libcuda.so
+-r-xr-xr-x 4 root root   183752 Apr 13 14:30 /usr/lib/wsl/lib/libcuda.so.1
+-r-xr-xr-x 4 root root   183752 Apr 13 14:30 /usr/lib/wsl/lib/libcuda.so.1.1
+-r-xr-xr-x 2 root root 11732120 Apr 13 14:30 /usr/lib/wsl/lib/libcudadebugger.so.1
+
+=== Vulkan ICDs ===
+--- /usr/share/vulkan/icd.d/asahi_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_asahi.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/gfxstream_vk_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.1.318",
+        "library_path": "libvulkan_gfxstream.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/intel_hasvk_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.3.318",
+        "library_path": "libvulkan_intel_hasvk.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/intel_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_intel.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/lvp_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_lvp.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/nouveau_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_nouveau.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/nvidia_icd.json ---
+{
+    "file_format_version" : "1.0.1",
+    "ICD": {
+        "library_path": "libGLX_nvidia.so.0",
+        "api_version" : "1.4.329"
+    }
+}
+--- /usr/share/vulkan/icd.d/radeon_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_radeon.so"
+    },
+    "file_format_version": "1.0.1"
+}--- /usr/share/vulkan/icd.d/virtio_icd.json ---
+{
+    "ICD": {
+        "api_version": "1.4.318",
+        "library_path": "libvulkan_virtio.so"
+    },
+    "file_format_version": "1.0.1"
+}
+=== cargo-oxide version (commit) ===
+cargo-oxide 0.1.0
+6de0509
+
+=== disk ===
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G  231G  725G  25% /
+C:\             3.7T  2.2T  1.6T  59% /mnt/c

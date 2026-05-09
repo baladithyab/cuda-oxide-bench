@@ -1,0 +1,13 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-vecadd
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-vecadd...
+
+   Compiling oxide-vecadd v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-vecadd)
+    Finished `release` profile [optimized] target(s) in 0.34s
+     Running `target/release/oxide-vecadd`
+PASSED: all 1024 elements correct

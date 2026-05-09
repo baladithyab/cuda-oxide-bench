@@ -1,0 +1,45 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-matmul
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-matmul...
+
+   Compiling oxide-matmul v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-matmul)
+    Finished `release` profile [optimized] target(s) in 0.35s
+     Running `target/release/oxide-matmul`
+[oxide] matmul 4096x4096 f32 (137.44 GFLOP/iter)
+
+[oxide-safe] iter 0: 54.61 ms (2.517 TFLOPS)
+[oxide-safe] iter 1: 56.67 ms (2.425 TFLOPS)
+[oxide-safe] iter 2: 51.82 ms (2.652 TFLOPS)
+[oxide-safe] iter 3: 54.66 ms (2.515 TFLOPS)
+[oxide-safe] iter 4: 60.46 ms (2.273 TFLOPS)
+[oxide-safe] iter 5: 59.62 ms (2.305 TFLOPS)
+[oxide-safe] iter 6: 59.30 ms (2.318 TFLOPS)
+[oxide-safe] iter 7: 56.17 ms (2.447 TFLOPS)
+[oxide-safe] iter 8: 61.62 ms (2.230 TFLOPS)
+[oxide-safe] iter 9: 56.86 ms (2.417 TFLOPS)
+[oxide-safe] BEST   51.82 ms  2.652 TFLOPS
+[oxide-safe] MEDIAN 56.86 ms  2.417 TFLOPS
+
+[oxide-unchk] iter 0: 23.71 ms (5.798 TFLOPS)
+[oxide-unchk] iter 1: 22.43 ms (6.129 TFLOPS)
+[oxide-unchk] iter 2: 23.15 ms (5.937 TFLOPS)
+[oxide-unchk] iter 3: 23.70 ms (5.800 TFLOPS)
+[oxide-unchk] iter 4: 23.13 ms (5.942 TFLOPS)
+[oxide-unchk] iter 5: 23.33 ms (5.891 TFLOPS)
+[oxide-unchk] iter 6: 22.53 ms (6.100 TFLOPS)
+[oxide-unchk] iter 7: 23.85 ms (5.763 TFLOPS)
+[oxide-unchk] iter 8: 22.54 ms (6.098 TFLOPS)
+[oxide-unchk] iter 9: 22.84 ms (6.017 TFLOPS)
+[oxide-unchk] BEST   22.43 ms  6.129 TFLOPS
+[oxide-unchk] MEDIAN 23.15 ms  5.937 TFLOPS
+
+=== summary ===
+safe       BEST 51.82 ms  MEDIAN 56.86 ms
+unchecked  BEST 22.43 ms  MEDIAN 23.15 ms
+speedup (median): 2.46x
+[oxide] correctness spot-check: 3/3

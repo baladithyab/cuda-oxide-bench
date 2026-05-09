@@ -1,0 +1,11 @@
+[cuda] device: NVIDIA GeForce RTX 5090 (sm_120)
+[cuda] matmul 4096x4096 f32, 137.44 GFLOP/iter
+[cuda] warmup: 21.47 ms (6.401 TFLOPS)
+[cuda] iter 0: 21.74 ms (6.323 TFLOPS)
+[cuda] iter 1: 22.28 ms (6.170 TFLOPS)
+[cuda] iter 2: 21.19 ms (6.485 TFLOPS)
+[cuda] iter 3: 21.53 ms (6.385 TFLOPS)
+[cuda] iter 4: 20.64 ms (6.659 TFLOPS)
+
+[cuda] BEST   20.64 ms  6.659 TFLOPS
+[cuda] MEDIAN 21.53 ms  6.385 TFLOPS

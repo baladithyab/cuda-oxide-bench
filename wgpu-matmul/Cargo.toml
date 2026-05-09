@@ -1,0 +1,9 @@
+[package]
+name = "wgpu-matmul"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+wgpu = { version = "22", features = ["dx12"] }
+pollster = "0.3"
+bytemuck = { version = "1", features = ["derive"] }

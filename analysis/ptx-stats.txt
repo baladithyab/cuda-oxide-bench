@@ -1,0 +1,21 @@
+=== oxide_matmul.ptx fma count ===
+0
+=== oxide_matmul.ptx mul.rn + add.rn count ===
+4
+=== oxide_matmul.ptx ld.global count ===
+0
+=== oxide_matmul.ptx setp count ===
+8
+=== oxide_matmul.ptx total lines ===
+164 oxide-matmul/oxide_matmul.ptx
+
+=== nvcc matmul.ptx fma count ===
+5
+=== nvcc matmul.ptx mul.rn + add.rn count ===
+0
+=== nvcc matmul.ptx ld.global.nc count ===
+10
+=== nvcc matmul.ptx setp count ===
+7
+=== nvcc matmul.ptx total lines ===
+124 cuda-matmul/matmul.ptx

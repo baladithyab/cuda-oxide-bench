@@ -1,0 +1,23 @@
+# Build artifacts
+target/
+**/target/
+Cargo.lock.bak
+
+# cuda-oxide intermediate / build outputs (per-project codegen)
+*.cubin
+**/oxide_*.ptx.bak
+**/oxide_*.ll.bak
+
+# CUDA C++ binary (rebuild from source)
+cuda-matmul/matmul
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs we want to keep are committed explicitly; ignore stray runs
+*.tmp

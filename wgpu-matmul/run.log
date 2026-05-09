@@ -1,0 +1,24 @@
+libEGL warning: failed to get driver name for fd -1
+
+libEGL warning: MESA-LOADER: failed to retrieve device information
+
+libEGL warning: failed to get driver name for fd -1
+
+MESA: error: ZINK: failed to choose pdev
+libEGL warning: egl: failed to create dri2 screen
+[wgpu] candidate: llvmpipe (LLVM 20.1.2, 256 bits) (Vulkan, type=Cpu)
+[wgpu] candidate: llvmpipe (LLVM 20.1.2, 256 bits) (Gl, type=Cpu)
+[wgpu] using: llvmpipe (LLVM 20.1.2, 256 bits) (Vulkan, type=Cpu)
+[wgpu] !! WARNING: only CPU adapter available (WSL Vulkan limitation). Numbers below are CPU-side, not real GPU.
+[wgpu] max_storage_buffer_binding_size = 128 MiB
+[wgpu] timestamp_query feature: true
+[wgpu] matmul 4096x4096 f32, 137.44 GFLOP/iter
+[wgpu] warmup 0: gpu_ts=25576.33 ms (0.005 TFLOPS)  cpu_wall=25813.90 ms
+[wgpu] iter 1: gpu_ts=25448.37 ms (0.005 TFLOPS)  cpu_wall=25448.67 ms
+[wgpu] iter 2: gpu_ts=28436.62 ms (0.005 TFLOPS)  cpu_wall=28436.90 ms
+[wgpu] iter 3: gpu_ts=29942.16 ms (0.005 TFLOPS)  cpu_wall=29942.67 ms
+[wgpu] iter 4: gpu_ts=37103.11 ms (0.004 TFLOPS)  cpu_wall=37103.53 ms
+[wgpu] iter 5: gpu_ts=33681.23 ms (0.004 TFLOPS)  cpu_wall=33681.96 ms
+
+[wgpu] BEST   25448.37 ms  0.005 TFLOPS
+[wgpu] MEDIAN 29942.16 ms  0.005 TFLOPS
