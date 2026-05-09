@@ -10,6 +10,7 @@ Cargo.lock.bak
 
 # CUDA C++ binary (rebuild from source)
 cuda-matmul/matmul
+cuda-matmul-tiled/matmul
 cublas-matmul/matmul
 
 # Editor / OS

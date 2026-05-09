@@ -1,0 +1,52 @@
+[cuda-tiled] device: NVIDIA GeForce RTX 5090 (sm_120)
+[cuda-tiled] N=1024 matmul f32, 2.15 GFLOP/iter
+[cuda-tiled] N=1024 iter=0 gpu_ms=0.135 tflops=15.888
+[cuda-tiled] N=1024 iter=1 gpu_ms=0.094 tflops=22.818
+[cuda-tiled] N=1024 iter=2 gpu_ms=0.089 tflops=24.105
+[cuda-tiled] N=1024 iter=3 gpu_ms=0.087 tflops=24.727
+[cuda-tiled] N=1024 iter=4 gpu_ms=0.088 tflops=24.465
+[cuda-tiled] N=1024 iter=5 gpu_ms=0.086 tflops=25.087
+[cuda-tiled] N=1024 iter=6 gpu_ms=0.084 tflops=25.546
+[cuda-tiled] N=1024 iter=7 gpu_ms=0.085 tflops=25.182
+[cuda-tiled] N=1024 iter=8 gpu_ms=0.084 tflops=25.439
+[cuda-tiled] N=1024 iter=9 gpu_ms=0.089 tflops=24.149
+[cuda-tiled] N=1024 check (0,0): got=1.5333 want=1.5333 rel=8.552e-07 OK
+[cuda-tiled] N=1024 check (512,512): got=1.5381 want=1.5381 rel=6.200e-07 OK
+[cuda-tiled] N=1024 check (1023,1023): got=1.5336 want=1.5336 rel=6.219e-07 OK
+[cuda-tiled] N=1024 correctness: 3/3 OK
+[cuda-tiled] N=2048 matmul f32, 17.18 GFLOP/iter
+[cuda-tiled] N=2048 iter=0 gpu_ms=0.514 tflops=33.435
+[cuda-tiled] N=2048 iter=1 gpu_ms=0.501 tflops=34.265
+[cuda-tiled] N=2048 iter=2 gpu_ms=0.505 tflops=33.990
+[cuda-tiled] N=2048 iter=3 gpu_ms=0.500 tflops=34.333
+[cuda-tiled] N=2048 iter=4 gpu_ms=0.503 tflops=34.148
+[cuda-tiled] N=2048 iter=5 gpu_ms=1.441 tflops=11.920
+[cuda-tiled] N=2048 iter=6 gpu_ms=0.997 tflops=17.234
+[cuda-tiled] N=2048 iter=7 gpu_ms=0.519 tflops=33.101
+[cuda-tiled] N=2048 iter=8 gpu_ms=0.507 tflops=33.902
+[cuda-tiled] N=2048 iter=9 gpu_ms=0.785 tflops=21.893
+[cuda-tiled] N=2048 check (0,0): got=3.0674 want=3.0674 rel=1.244e-06 OK
+[cuda-tiled] N=2048 check (1024,1024): got=3.0686 want=3.0686 rel=1.243e-06 OK
+[cuda-tiled] N=2048 check (2047,2047): got=3.0721 want=3.0721 rel=1.397e-06 OK
+[cuda-tiled] N=2048 correctness: 3/3 OK
+[cuda-tiled] N=4096 matmul f32, 137.44 GFLOP/iter
+[cuda-tiled] N=4096 iter=0 gpu_ms=5.393 tflops=25.486
+[cuda-tiled] N=4096 iter=1 gpu_ms=3.639 tflops=37.771
+[cuda-tiled] N=4096 iter=2 gpu_ms=5.176 tflops=26.552
+[cuda-tiled] N=4096 iter=3 gpu_ms=4.906 tflops=28.012
+[cuda-tiled] N=4096 iter=4 gpu_ms=3.853 tflops=35.666
+[cuda-tiled] N=4096 iter=5 gpu_ms=4.897 tflops=28.069
+[cuda-tiled] N=4096 iter=6 gpu_ms=5.101 tflops=26.941
+[cuda-tiled] N=4096 iter=7 gpu_ms=4.228 tflops=32.507
+[cuda-tiled] N=4096 iter=8 gpu_ms=4.226 tflops=32.524
+[cuda-tiled] N=4096 iter=9 gpu_ms=4.601 tflops=29.870
+[cuda-tiled] N=4096 check (0,0): got=6.1420 want=6.1420 rel=2.640e-06 OK
+[cuda-tiled] N=4096 check (2048,2048): got=6.1455 want=6.1455 rel=2.483e-06 OK
+[cuda-tiled] N=4096 check (4095,4095): got=6.1392 want=6.1392 rel=2.408e-06 OK
+[cuda-tiled] N=4096 correctness: 3/3 OK
+
+[cuda-tiled] ===== SUMMARY =====
+[cuda-tiled]      N     best_ms   median_ms     best_TF   median_TF
+[cuda-tiled]   1024       0.084       0.087      25.546      24.596
+[cuda-tiled]   2048       0.500       0.510      34.333      33.667
+[cuda-tiled]   4096       3.639       4.749      37.771      28.941
