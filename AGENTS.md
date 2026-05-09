@@ -156,3 +156,55 @@ patterns specific to this codebase; general agent guidance lives in skills.
   `warp_reduce`, `tiled_gemm`, `gemm_sol`, `tma_copy` etc. in the upstream
   source tree. Importing them as-is for smoke testing is faster and more
   accurate than reimplementing from API docs.
+
+## Wave 7-11 lessons
+
+- **Algorithm geometry beats compiler-quality for matmul wins.** Wave 7's
+  3-3.6× lift over the original oxide-tiled was 80% from going to a 4×4
+  register microtile and 20% from FFMA. Don't chase compiler-level fixes
+  before exhausting algorithm-level patches.
+
+- **libNVVM contracts `*+` to FFMA more often than Wave 3 suggested.**
+  In Wave 7's tiled kernel and Wave 8's 3DGS kernel, plain `sum = sum +
+  a*b` produced FFMA at SASS level. The Wave 3 finding ("FastmathFlags::
+  empty() blocks contraction") may be specific to runtime-bounded inner
+  loops (where the K is dim-dependent and unrollable only at link time).
+  Don't treat that finding as universal until reinvestigated.
+
+- **Apples-to-apples is gold.** Wave 11's headline result — byte-identical
+  pixels in cuda-oxide and nvcc — was only possible because we ported the
+  Rust kernel line-by-line to C++ with the same algorithm, same data, same
+  camera. The strongest single piece of evidence in the whole study.
+  When making language-comparison claims, port the workload identically;
+  don't compare cuda-oxide-tiled to a different nvcc-tiled algorithm and
+  call it a benchmark.
+
+- **md5sum is a perfectly good correctness oracle for graphics output.**
+  When two pipelines should produce bit-identical output (because their
+  algorithm-level differences are zero), md5 the PPMs and you'll know
+  immediately. No need for fancy SSIM. We caught the cam D 3-pixel diff
+  from md5-mismatch + a quick `np.abs(a-b).max()` follow-up.
+
+- **Subagent timeouts at 600s are usually false positives.** Wave 7 and
+  Wave 10 both showed `status: timeout` while having actually committed
+  the work. Always check `git log` and the working folder before
+  reissuing — the subagent may have finished and just lost the final
+  status report. Look at the commit author + message to spot subagent
+  output (Hermes auto-stamps `Hermes <hermes@localhost>`).
+
+- **Hermes terminal flags `&` as background-detection** in any command,
+  including jj revsets. Quote the revset (`'master & ::@'` → `"master & ::@"`)
+  or use `--limit N` instead. Documented in the jj-vcs skill.
+
+- **Repo cleanup is worth ~10 minutes after every 5 waves.** By Wave 11
+  we had 27 tracked PTX/LL/LTOIR build artifacts (regenerable on every
+  build) and inconsistent .gitignores across 11 oxide crates. Audit:
+  `git ls-files | grep -E '\.(ll|ltoir|cubin|ptx)$'` and decide
+  per-file based on whether an analysis doc cites it. Build artifacts
+  not cited by docs should be untracked; cited ones must stay.
+
+- **Lock file policy: track in binary apps.** All our crates are bin
+  apps; tracking Cargo.lock everywhere ensures reproducibility for anyone
+  who clones. Standardize via the same .gitignore template across crates
+  (excludes target/ and *.cubin/*.ll/*.ltoir/*.ptx/*.sass; does NOT
+  exclude Cargo.lock).

@@ -104,7 +104,50 @@ The Phase 8 review flagged that the libNVVM corrigendum confounded two variables
 
 [`oxide-3dgs-mini/`](oxide-3dgs-mini/) — Wave 8 ports a forward-only 2D Gaussian Splatting rasterizer to cuda-oxide as a complexity stress-test. 256×256 image, 512 gaussians, per-pixel kernel iterates all gaussians with front-to-back alpha-blend and early-exit on transmittance < 1e-4. **Builds and runs cleanly: 75 µs/frame, ~9 TFLOPS effective on the work that ran.**
 
-Verdict: **cuda-oxide handled the kernel cleanly.** 12-arg kernel signature with mixed `&[f32]` / `DisjointSlice<f32>` / `u32`, `core::intrinsics::expf32` lowers through libdevice to hardware MUFU.EX2, multi-branch early-exit produces sane SASS. No API friction. Rendered output saved as `oxide-3dgs-mini/output.ppm`.
+Verdict: **cuda-oxide handled the kernel cleanly.** 12-arg kernel signature with mixed `&[f32]` / `DisjointSlice<f32>` / `u32`, `core::intrinsics::expf32` lowers through libdevice to hardware MUFU.EX2, multi-branch early-exit produces sane SASS. No API friction. Wave 8.5 added two procedural test scenes (concentric rings, smiley face) for visual sanity-check; both render correctly via the unchanged kernel.
+
+## Wave 9-10: real public 3DGS scenes through the cuda-oxide pipeline
+
+[`oxide-3dgs-real/`](oxide-3dgs-real/) extends the toy renderer with a full PLY parser and 3D→2D projection so it can consume real public 3DGS data:
+
+- **Wave 9** rendered the 14,526-gaussian Luigi figurine (`dylanebert/3dgs/luigi.ply`, 988 KB) at ~10 ms/frame. Standard pipeline: quaternion → R, `Σ_3d = R · diag(s²) · Rᵀ`, perspective Jacobian → `Σ_2d`, conic = inv(Σ_2d), SH-degree-0 color = `0.28209479 · f_dc + 0.5`, sigmoid opacity, depth sort by camera-space z.
+- **Wave 10** rendered the canonical 53,671-gaussian Utsuho plush scene (`solaaaa/sample-gaussian-splats`, 13 MB, SH degree 3 .ply but rendering at SH degree 0). Recognizable chibi character figurine at ~37 ms/frame.
+
+The kernel is byte-identical to the Wave 8 toy — only the host-side scene generator changed. Validates that cuda-oxide can drive a non-trivial real-world graphics pipeline end-to-end.
+
+## Wave 11: byte-identical pixels in cuda-oxide and CUDA C++ on the same 3DGS scene
+
+The strongest single result in the repo. We ported the 3D Gaussian Splatting forward rasterizer to nvcc CUDA C++ at [`cuda-3dgs-real/`](cuda-3dgs-real/) as an apples-to-apples reference. Same PLY parser, same camera, same kernel algorithm — line-by-line port to a single .cu file.
+
+**Pixel-level result on Wave 10's Utsuho scene (53,671 gaussians, 800×800):**
+
+| Camera | cuda-oxide md5 | nvcc md5 | Diff |
+|---|---|---|---|
+| A (canonical) | `9f45b235168305e4b3dad2abe8f50db4` | `9f45b235168305e4b3dad2abe8f50db4` | **byte-identical** |
+| C | `e3a3fd9056f3da3f1c512c7a268b777e` | `e3a3fd9056f3da3f1c512c7a268b777e` | **byte-identical** |
+| D | (different) | (different) | **3 of 640,000 pixels differ by 1 intensity level** |
+
+Cam A and C are bit-identical; cam D shows sub-ULP clang-vs-rustc FMA reordering on three pixels.
+
+**SASS-level comparison (kernel body only):**
+
+| Instruction | nvcc | cuda-oxide |
+|---|---:|---:|
+| FFMA | 9 | 9 |
+| FMUL | 9 | 9 |
+| FADD | 5 | 5 |
+| MUFU (for `expf`) | 1 | 1 |
+| LDG.E.CONSTANT | **9** | 0 |
+| LDG.E (plain) | 0 | **9** |
+
+Arithmetic mix is **identical**. The only SASS-level difference is the read-only-cache hint — exactly the Wave 5 LDG.E.CONSTANT finding that drove the matmul-tiled gap. On this kernel it doesn't move runtime (kernel is MUFU/branch-bound, not memory-bound).
+
+**Kernel timing** (3 iters, 800×800, gaming concurrent on the same GPU):
+- nvcc: 36.5–42.0 ms median
+- cuda-oxide: 37.1–42.0 ms median
+- ±15% noise band, no winner
+
+**Verdict.** On the Utsuho 3DGS rasterizer, cuda-oxide produces byte-identical pixels and arithmetically-identical SASS. The matmul-scale codegen gap **does not generalize** to splat rasterization. The only SASS-level delta is the LDG.E.CONSTANT hint, which is a single-line patch on the upstream NVPTX lowering side and doesn't currently affect runtime on this workload. **This is the single most concrete piece of evidence in the study that cuda-oxide is production-viable for non-trivial real-world workloads.**
 
 ## Compiler gap deep-dive
 

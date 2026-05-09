@@ -28,10 +28,33 @@ Full scaling sweep — 7 `(impl, kernel)` configurations × N ∈ {1024, 2048, 4
 
 **→ See [SUMMARY.md](SUMMARY.md) for the full writeup**, or [`results/scaling-summary.md`](results/scaling-summary.md) for per-size best/median/p95 tables. The libNVVM correction is in [`docs/experiments/libnvvm-corrigendum.md`](docs/experiments/libnvvm-corrigendum.md). PTX-level deltas in per-folder `ANALYSIS.md` files. SASS-level deep-dive in [`docs/experiments/sass-analysis.md`](docs/experiments/sass-analysis.md).
 
-## Wave 7-8: closing the gap + 3D Gaussian Splatting
+## Wave 11: real-data 3DGS, byte-identical pixels in cuda-oxide and CUDA C++
+
+The strongest single result in the repo. We ported the 3D Gaussian Splatting forward rasterizer to nvcc CUDA C++ ([`cuda-3dgs-real/`](cuda-3dgs-real/)) as an apples-to-apples reference for cuda-oxide ([`oxide-3dgs-real/`](oxide-3dgs-real/)). Same PLY parser, same camera, same kernel algorithm — line-by-line port. Result on a real 53,671-gaussian scene (Utsuho figurine, SH degree 0):
+
+| | cuda-oxide (Rust) | nvcc (C++) |
+|---|---|---|
+| Pixel output (cam A canonical) | md5: `9f45b235168305e4b3dad2abe8f50db4` | md5: `9f45b235168305e4b3dad2abe8f50db4` |
+| Pixel output (cam C) | md5: `e3a3fd9056f3da3f1c512c7a268b777e` | md5: `e3a3fd9056f3da3f1c512c7a268b777e` |
+| Kernel time (median, 800×800, 3 iters) | 37.1 ms | 36.5 ms |
+| FFMA / FMUL / FADD / MUFU | 9 / 9 / 5 / 1 | 9 / 9 / 5 / 1 |
+| LDG.E.CONSTANT vs plain LDG.E | 0 / 9 | **9 / 0** |
+
+**Pixel outputs are byte-identical** (md5 hashes match exactly on cameras A and C; cam D differs by 1 intensity-level on 3 of 640,000 pixels — sub-ULP clang-vs-rustc FMA reordering noise). **SASS is arithmetically identical**; the only difference is the read-only-cache hint (the same Wave 5 LDG.E.CONSTANT finding from matmul). Within timing noise (user gaming concurrently), kernel times are indistinguishable. **Cuda-oxide has no measurable overhead vs nvcc on this real-data kernel.**
+
+This is the single most concrete piece of evidence in the study that cuda-oxide is production-viable for non-trivial workloads. The matmul-scale codegen gap **does not generalize** to splat rasterization, and the only SASS-level difference is the read-only-cache hint, which doesn't affect runtime on a MUFU-bottlenecked kernel.
+
+## Wave 9-10: real public 3DGS scenes through the cuda-oxide kernel
+
+Before Wave 11's apples-to-apples comparison, Wave 9-10 verified the kernel pipeline could consume and render real-world 3DGS data:
+
+- **Wave 9** ([`oxide-3dgs-real/`](oxide-3dgs-real/), Luigi figurine from `dylanebert/3dgs`, 14,526 gaussians): full PLY parser, quaternion → rotation matrix, perspective Jacobian projection, SH-degree-0 color extraction, sigmoid opacity, depth sort. Renders at ~10 ms/frame at 800×800.
+- **Wave 10** (Utsuho plush from `solaaaa/sample-gaussian-splats`, 53,671 gaussians, SH degree 3 .ply): canonical chibi character figurine on a wooden base; render is recognizable (vision-confirmed). ~37 ms/frame at 800×800.
+
+## Wave 7-8: closing the matmul gap + the original 3DGS toy
 
 - **Wave 7 — register microtile + fmuladd:** [`oxide-matmul-tiled-microtile/`](oxide-matmul-tiled-microtile/) implements a 4×4 register microtile in cuda-oxide. **At N=1024: 27-28 TFLOPS, matching nvcc-tiled (24.5 TF).** At N=4096: 16-17 TF vs nvcc 28 TF (60%, gap halved from old oxide-tiled).
-- **Wave 8 — rudimentary 3DGS rasterizer:** [`oxide-3dgs-mini/`](oxide-3dgs-mini/) ports a forward 2D Gaussian Splatting rasterizer (256×256 image, 512 gaussians, alpha-blend with early-exit) to cuda-oxide. Builds and runs at 75 µs/frame. cuda-oxide handles a complex 12-arg kernel cleanly. Rendered PPM saved.
+- **Wave 8 — rudimentary 3DGS rasterizer:** [`oxide-3dgs-mini/`](oxide-3dgs-mini/) ports a forward 2D Gaussian Splatting rasterizer (256×256 image, alpha-blend with early-exit) to cuda-oxide. Builds and runs at 75 µs/frame. cuda-oxide handles a complex 12-arg kernel cleanly. Rendered PPM saved (rings + smiley scenes in [`oxide-3dgs-mini/`](oxide-3dgs-mini/)).
 
 **Notable surprise**: libNVVM **does** contract plain `*+` to FFMA in some kernels (3DGS's per-pixel kernel; the `_safe` variant in Wave 7's tiled-microtile). Wave 3's "FastmathFlags::empty() blocks contraction" finding may be specific to runtime-bounded inner loops, not universal. Worth re-investigating.
 

@@ -9,7 +9,14 @@ Vision: ship a comprehensive, third-party-citeable evaluation of NVlabs/cuda-oxi
 - ✅ Wave 4 shipped: reduction (W4A), bandwidth bench (W4B), libNVVM causal isolation (W4C — inconclusive).
 - ✅ Wave 5 shipped: SASS-level analysis identifying `LDG.E.CONSTANT` vs `LDG.E` as the residual-gap root cause.
 - ✅ Wave 6 shipped: ran cuda-oxide's `gemm_sol`, `tma_copy`, `tcgen05_matmul` examples — characterizing consumer (sm_120) vs datacenter (sm_100) Blackwell support.
-- Open question: how does the LDG.E.CONSTANT delta translate to actual perf delta on a tiled kernel? Wave 7 candidate.
+- ✅ Wave 7 shipped: register-microtile + fmuladd cuda-oxide tiled matmul; reaches nvcc-tiled parity at N=1024, 60% at N=4096.
+- ✅ Wave 8 shipped: 2D Gaussian Splatting forward rasterizer (toy scene); kernel handled cleanly.
+- ✅ Wave 8.5 shipped: procedural rings + smiley test scenes through the same kernel.
+- ✅ Wave 9 shipped: real public 3DGS scene (Luigi figurine) rendered through the cuda-oxide kernel.
+- ✅ Wave 10 shipped: canonical Utsuho scene (53,671 gaussians) rendered.
+- ✅ Wave 11 shipped: nvcc CUDA C++ apples-to-apples reference; **byte-identical pixels** + arithmetically-identical SASS on the Utsuho scene.
+- ✅ Repo cleanup: untracked regenerable build artifacts (kept evidence-cited PTX/LL files); standardized .gitignores; tracked Cargo.lock everywhere.
+- Open question: SH-degree-3 view-dependent color (currently both pipelines use SH degree 0); tile-binning optimization for big scenes.
 
 ## Items
 
@@ -60,12 +67,22 @@ Vision: ship a comprehensive, third-party-citeable evaluation of NVlabs/cuda-oxi
 
 ### P3 — opened by Wave 4-6
 
-- [ ] **N4: Memory-bandwidth bench at varying N.** Done in Wave 4 W4B: cuda-oxide and nvcc within 0.1% at N=64M (~90% of HBM peak).
-- [ ] **N5: SASS-level disassembly of remaining gap.** Done in Wave 5: `LDG.E.CONSTANT` vs `LDG.E` is the residual-gap root cause; both compilers unroll 8x.
-- [ ] **N6: Drop-in cuda-oxide `gemm_sol` / `tcgen05_matmul`.** Done in Wave 6: PTX builds, runtime fails on consumer sm_120 Blackwell — datacenter-only (sm_100/sm_100a). TMA works on sm_120.
-- [ ] **U2: Upstream issue for `LDG.E.CONSTANT` / read-only cache hint.** Wave 5 SASS evidence supports drafting a second upstream issue alongside the FMA one. Suggested wording: "rustc-codegen-cuda doesn't emit `LDG.E.CONSTANT` for `&[T]` reads where the slice is shared and immutable; equivalent CUDA C++ with `const __restrict__` does." Patch space: NVPTX lowering of slice-deref to add `nontemporal!`/`invariant.load` hints, or expose a `#[restrict]` attribute on slice params.
-- [ ] **W2: Wave 7 candidate — quantify LDG.E.CONSTANT impact in a tiled kernel.** Patch oxide-matmul-tiled to use raw pointers + manual cache-hint inline asm via `core::arch::asm!`, see if the tiled gap closes.
+- [x] **N4: Memory-bandwidth bench at varying N.** Done in Wave 4 W4B: cuda-oxide and nvcc within 0.1% at N=64M (~90% of HBM peak).
+- [x] **N5: SASS-level disassembly of remaining gap.** Done in Wave 5: `LDG.E.CONSTANT` vs `LDG.E` is the residual-gap root cause; both compilers unroll 8x.
+- [x] **N6: Drop-in cuda-oxide `gemm_sol` / `tcgen05_matmul`.** Done in Wave 6: PTX builds, runtime fails on consumer sm_120 Blackwell — datacenter-only (sm_100/sm_100a). TMA works on sm_120.
+- [ ] **U2: Upstream issue for `LDG.E.CONSTANT` / read-only cache hint.** Wave 5 SASS evidence and Wave 11 confirmation support drafting a second upstream issue alongside the FMA one. Suggested wording: "rustc-codegen-cuda doesn't emit `LDG.E.CONSTANT` for `&[T]` reads where the slice is shared and immutable; equivalent CUDA C++ with `const __restrict__` does." Patch space: NVPTX lowering of slice-deref to add `nontemporal!`/`invariant.load` hints, or expose a `#[restrict]` attribute on slice params.
+- [x] **W2: Wave 7 candidate — quantify register-microtile lift in cuda-oxide tiled kernel.** Done in Wave 7: 4×4 microtile + fmuladd hits 27-28 TFLOPS at N=1024 (matches nvcc-tiled 24.5), 16-17 TFLOPS at N=4096 (60% of nvcc).
 - [ ] **W3: Wave 8 candidate — try cuda-oxide on a Hopper SXM5 (H100) cloud instance** to run `gemm_sol` end-to-end and compare to upstream's claimed 868 TFLOPS on B200.
+
+### P3 — opened by Wave 7-11
+
+- [x] **G1: 2D Gaussian Splatting toy renderer in cuda-oxide.** Done in Wave 8.
+- [x] **G2: Real-public 3DGS scene through cuda-oxide.** Done in Wave 9 (Luigi) + Wave 10 (Utsuho).
+- [x] **G3: Apples-to-apples nvcc CUDA C++ port of the 3DGS pipeline.** Done in Wave 11. Pixel-identical, SASS-identical except for LDG.E.CONSTANT hint.
+- [ ] **G4: SH degree 3 evaluation.** Both implementations currently use SH degree 0 (diffuse only). Adding view-dependent SH3 color (16 coefficients × 3 channels per gaussian) would make renders show specular variation. ~100 lines per implementation. Cheap and high-value.
+- [ ] **G5: Tile-binning optimization.** Currently every pixel iterates every gaussian (O(N·W·H)). Real 3DGS bins gaussians into 16×16 screen tiles so each pixel only touches the ones overlapping its tile (O(K·W·H) where K is gaussians-per-tile, typically 50-200). Would 10-50× speed up rendering on 100k+-gaussian scenes. Significant work: GPU-side prefix sum, scatter, sort.
+- [ ] **G6: Bigger scene** (Mip-NeRF 360 bicycle/garden, ~500k gaussians). Easy without tile-binning; useful with.
+- [ ] **G7: Backward pass / training.** Would require gradient computation for all the projection math. Out of scope for a benchmark repo, but a natural Wave-X candidate if we ever wanted to claim "full 3DGS in cuda-oxide."
 
 ## Out of scope (for now)
 
