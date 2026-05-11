@@ -1,4 +1,4 @@
-# cuda-oxide-bench backlog
+# cuda-exploration backlog
 
 Vision: ship a comprehensive, third-party-citeable evaluation of NVlabs/cuda-oxide v0.1.0 vs CUDA C++ baselines on Blackwell. Quantify the cost of Rust safety, identify compiler gaps, document setup pitfalls. Independent third-party work, not affiliated.
 

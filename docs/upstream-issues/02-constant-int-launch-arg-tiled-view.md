@@ -100,7 +100,7 @@ ct.launch(stream.ptr, (N // 128, N // 128), matmul, (a, b, c))
 
 This compiles and runs correctly at numerical parity with `cupy.matmul`
 (`rel_err ≈ 4e-7` at N=512 on f32). The factory pattern is used
-throughout the cuda-oxide-bench repo:
+throughout the cuda-exploration repo:
 
 - `cutile-vecadd-bench/main.py`
 - `cutile-matmul/main.py`
@@ -129,10 +129,10 @@ to do. But (2) would unblock users immediately.
 
 ## Evidence / references
 
-- cuda-oxide-bench `cutile-matmul-tiled/ANALYSIS.md`, section
+- cuda-exploration `cutile-matmul-tiled/ANALYSIS.md`, section
   **"Pitfall encountered — `Constant[int]` launch args"** — reproduces
   this exact error against cuda-tile 1.3.0:
-  <https://github.com/baladithyab/cuda-oxide-bench/blob/master/cutile-matmul-tiled/ANALYSIS.md>
+  <https://github.com/baladithyab/cuda-exploration/blob/master/cutile-matmul-tiled/ANALYSIS.md>
 - The working workaround is used in four separate benchmarks in that
   repo, all passing correctness vs `cupy.matmul` / `cupy.add` references.
 
@@ -152,8 +152,8 @@ investigation can cover them if they share a root cause:
 
 ## Context / cooperative note
 
-This finding comes from **cuda-oxide-bench**
-(<https://github.com/baladithyab/cuda-oxide-bench>), a public third-party
+This finding comes from **cuda-exploration**
+(<https://github.com/baladithyab/cuda-exploration>), a public third-party
 benchmark comparing cuda-oxide (rust-cuda), nvcc, and cuTile as GPU
 programming frontends on RTX 5090 Blackwell consumer hardware. The repo
 turned up a healthy picture for cuTile overall (172.5 TFLOPS at f16 matmul

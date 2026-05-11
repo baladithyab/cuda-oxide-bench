@@ -76,7 +76,7 @@ Added to `oxide-matmul/src/main.rs` (appended after `matmul_unchecked`):
 ### 3. Build + run
 
 ```bash
-cd /home/codeseys/cuda-oxide-bench/oxide-matmul
+cd /home/codeseys/cuda-exploration/oxide-matmul
 export PATH=/usr/lib/llvm-21/bin:$PATH:$HOME/.cargo/bin
 cargo oxide build oxide-matmul   # ✓ Build succeeded
 cargo oxide run oxide-matmul     # completes, SUMMARY unchanged

@@ -53,7 +53,7 @@ Yes. Multiple signals confirm:
 - We used `cublasGemmEx` with `CUBLAS_COMPUTE_32F` + `CUBLAS_GEMM_DEFAULT_TENSOR_OP` for both hgemm and bgemm. `CUBLAS_COMPUTE_32F` means f32 accumulator (matches cuTile W13.1's `f32acc` config).
 - `CUBLAS_DEFAULT_MATH` on CUDA 13.x + sm_120 already permits tensor-core use for reduced-precision GEMM; the explicit `TENSOR_OP` algo selector just pins the choice.
 - For the tf32 variant, `cublasSgemm` + `CUBLAS_TF32_TENSOR_OP_MATH` is the officially supported path. The existing W2A baseline uses `CUBLAS_PEDANTIC_MATH` which disables TF32 — so the 73.6 TF "sgemm" number in the repo is not a tf32 number, it's a strict-f32 number. This wave clarifies that tf32 mode gives ~104 TF, not 73.6.
-- Variance: one slow hgemm iter at N=2048 (0.143 ms vs ~0.107 median, +34%) and one slow bgemm iter at N=4096 (0.693 ms vs ~0.632, +10%) — consistent with known WSL2 / unmodified-clock variance documented in `cuda-oxide-bench/AGENTS.md`. Best-iter numbers are the right metric for peak-throughput comparison; median numbers are still within 3% of best.
+- Variance: one slow hgemm iter at N=2048 (0.143 ms vs ~0.107 median, +34%) and one slow bgemm iter at N=4096 (0.693 ms vs ~0.632, +10%) — consistent with known WSL2 / unmodified-clock variance documented in `cuda-exploration/AGENTS.md`. Best-iter numbers are the right metric for peak-throughput comparison; median numbers are still within 3% of best.
 - Both hgemm and bgemm exceed cuTile in best-iter AND median at every N ≥ 2048. sgemm-tf32 does too. Verdict is stable under metric choice.
 
 ## 6. Files produced

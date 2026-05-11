@@ -1,4 +1,4 @@
-# cuda-oxide-bench — agent-of-record notes
+# cuda-exploration — agent-of-record notes
 
 Lessons from running the deep work loop on this repo. These are operational
 patterns specific to this codebase; general agent guidance lives in skills.

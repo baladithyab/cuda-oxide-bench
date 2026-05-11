@@ -1,4 +1,4 @@
-# cuda-oxide-bench
+# cuda-exploration
 
 A fair-comparison benchmark of multiple GPU compute frontends on **RTX 5090 (Blackwell sm_120)**:
 [**cuda-oxide**](https://github.com/NVlabs/cuda-oxide) (Rust → PTX, v0.1.0),
@@ -156,8 +156,8 @@ The WSL2 VM exposes `/dev/dxg` (DirectX to CUDA passthrough) but no native Vulka
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/cuda-oxide-bench.git
-cd cuda-oxide-bench
+git clone https://github.com/<you>/cuda-exploration.git
+cd cuda-exploration
 cat SETUP.md
 ```
 

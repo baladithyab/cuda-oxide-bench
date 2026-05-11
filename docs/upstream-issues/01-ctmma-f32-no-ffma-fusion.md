@@ -91,9 +91,9 @@ grep -c FADD matmul_f32.sass   # → 2176
 ```
 
 Full reproducer (includes the other three dtype variants used for the
-comparison table below) lives in the cuda-oxide-bench repo:
+comparison table below) lives in the cuda-exploration repo:
 
-- <https://github.com/baladithyab/cuda-oxide-bench/blob/master/cutile-matmul-tiled-mixed/main.py>
+- <https://github.com/baladithyab/cuda-exploration/blob/master/cutile-matmul-tiled-mixed/main.py>
 
 ## Expected behavior
 
@@ -143,8 +143,8 @@ tensor-core win from Python via cuTile).
 
 ## Independently-verifiable evidence
 
-All in the cuda-oxide-bench repo
-(<https://github.com/baladithyab/cuda-oxide-bench>):
+All in the cuda-exploration repo
+(<https://github.com/baladithyab/cuda-exploration>):
 
 - `cutile-matmul-tiled-mixed/main.py` — 4-variant reproducer (f16/bf16/tf32/f32)
 - `cutile-matmul-tiled-mixed/mma_f32xf32_f32acc.sass` — the problem cubin
@@ -205,7 +205,7 @@ the exported kernel's LLVM/NVVM IR through `nvvm-ir` (or equivalent) with
 
 ## Context / cooperative note
 
-This finding comes from **cuda-oxide-bench**, a public third-party
+This finding comes from **cuda-exploration**, a public third-party
 benchmark comparing Rust (cuda-oxide / rust-cuda), CUDA C++ (nvcc), and
 cuTile as GPU programming frontends on RTX 5090. The project turned up
 **two good things about cuTile** alongside this bug — the `ct.mma` f16
@@ -214,6 +214,6 @@ path reaches 172.5 TFLOPS from Python which is an excellent result, and
 rust-cuda do not emit), beating both by 10-12% on memory-bound reductions.
 So this issue is narrow: the f32 fallback path of `ct.mma` specifically.
 
-The full repo is at <https://github.com/baladithyab/cuda-oxide-bench>.
+The full repo is at <https://github.com/baladithyab/cuda-exploration>.
 Happy to provide additional SASS dumps, NVVM IR dumps, or rerun the
 experiment with any suggested flag changes if that would help.

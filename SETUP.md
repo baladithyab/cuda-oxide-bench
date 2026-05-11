@@ -1,6 +1,6 @@
 # Setup
 
-Reproducible install steps for cuda-oxide-bench. Expect ~30 minutes end-to-end on a warm system, most of it downloading LLVM and building cargo-oxide.
+Reproducible install steps for cuda-exploration. Expect ~30 minutes end-to-end on a warm system, most of it downloading LLVM and building cargo-oxide.
 
 ## System requirements
 

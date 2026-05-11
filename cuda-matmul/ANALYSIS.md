@@ -153,7 +153,7 @@ on identical work**, not framework-level matmul cleverness.
 ## 7. Reproducing
 
 ```bash
-cd ~/cuda-oxide-bench/cuda-matmul
+cd ~/cuda-exploration/cuda-matmul
 nvcc -ccbin clang-14 -O3 -arch=sm_89 -o matmul matmul.cu
 ./matmul
 ```

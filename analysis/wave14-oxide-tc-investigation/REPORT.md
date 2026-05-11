@@ -1,7 +1,7 @@
 # Wave 14.4 — cuda-oxide tensor-core API surface on RTX 5090 (sm_120)
 
 **Upstream pinned:** `cuda-oxide` v0.1.0 @ commit `44abb0717610f5420f98bebee74c27be3a2c186b`
-(NVlabs/cuda-oxide, this is what every `cuda-oxide-bench/*` crate's `Cargo.lock`
+(NVlabs/cuda-oxide, this is what every `cuda-exploration/*` crate's `Cargo.lock`
 resolves to).
 
 **Question:** Can we add an `oxide-matmul-tiled-tf32/` (or any half-precision

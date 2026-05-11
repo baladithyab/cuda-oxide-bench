@@ -9,7 +9,7 @@ import os
 import sys
 from pathlib import Path
 
-OUT_DIR = Path("/home/codeseys/cuda-oxide-bench/analysis/wave13-sass")
+OUT_DIR = Path("/home/codeseys/cuda-exploration/analysis/wave13-sass")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Monkeypatch cuda.tile._compile.compile_tile
@@ -43,7 +43,7 @@ _ct_compile.compile_tile = _patched_compile_tile
 
 # 1) cutile-reduction
 print("=== cutile-reduction ===", flush=True)
-sys.path.insert(0, "/home/codeseys/cuda-oxide-bench/cutile-reduction")
+sys.path.insert(0, "/home/codeseys/cuda-exploration/cutile-reduction")
 import importlib
 if "main" in sys.modules:
     del sys.modules["main"]
@@ -53,12 +53,12 @@ try:
     print(f"  reduction smoke ok={ok}", flush=True)
 except Exception as e:
     print(f"  reduction smoke FAILED: {type(e).__name__}: {e}", flush=True)
-sys.path.remove("/home/codeseys/cuda-oxide-bench/cutile-reduction")
+sys.path.remove("/home/codeseys/cuda-exploration/cutile-reduction")
 del sys.modules["main"]
 
 # 2) cutile-matmul-tiled
 print("=== cutile-matmul-tiled ===", flush=True)
-sys.path.insert(0, "/home/codeseys/cuda-oxide-bench/cutile-matmul-tiled")
+sys.path.insert(0, "/home/codeseys/cuda-exploration/cutile-matmul-tiled")
 import main as mm_main  # type: ignore
 try:
     res = mm_main.run_correctness(mm_main.CORRECTNESS_N)

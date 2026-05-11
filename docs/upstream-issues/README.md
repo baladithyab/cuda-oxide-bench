@@ -1,7 +1,7 @@
 # Upstream issue drafts — NVIDIA cutile-python
 
 Drafts prepared for submission to <https://github.com/nvidia/cutile-python/issues>.
-All findings are from **Wave 12–13** of cuda-oxide-bench, an independent
+All findings are from **Wave 12–13** of cuda-exploration, an independent
 third-party benchmark comparing cuda-oxide (rust-cuda), CUDA C++ (nvcc),
 and cuTile on RTX 5090 (Blackwell consumer, `sm_120`) with cuda-tile 1.3.0.
 
@@ -17,7 +17,7 @@ SASS dump, per-iter CSV, or reproducer script committed in this repo.
 
 ## Context for maintainers
 
-**cuda-oxide-bench** (<https://github.com/baladithyab/cuda-oxide-bench>)
+**cuda-exploration** (<https://github.com/baladithyab/cuda-exploration>)
 is a public benchmark repository evaluating GPU programming frontends for
 Blackwell consumer hardware. Wave 12 added cuTile benchmarks; Wave 13
 disassembled the resulting cubins with `cuobjdump` (CUDA 13.2) for

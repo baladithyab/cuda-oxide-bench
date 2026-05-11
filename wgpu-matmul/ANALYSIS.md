@@ -173,7 +173,7 @@ selection + a CPU-side reproducer.
 cargo run --release --manifest-path=wgpu-matmul/Cargo.toml
 ```
 
-From `~/cuda-oxide-bench`. On this WSL2 host the run will print the `!!
+From `~/cuda-exploration`. On this WSL2 host the run will print the `!!
 WARNING: only CPU adapter available` line and then spend roughly 25–30
 seconds per iteration (≈ 2–3 minutes for warmup + 5 iters) on the 24-core
 znver4 CPU via llvmpipe. The `run.log` in this directory is a trimmed capture

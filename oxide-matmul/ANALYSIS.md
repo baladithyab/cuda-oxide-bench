@@ -129,7 +129,7 @@ Prerequisites:
 Run:
 
 ```bash
-cd /home/codeseys/cuda-oxide-bench/oxide-matmul
+cd /home/codeseys/cuda-exploration/oxide-matmul
 cargo oxide run oxide-matmul
 ```
 

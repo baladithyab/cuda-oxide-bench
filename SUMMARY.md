@@ -1,4 +1,4 @@
-# cuda-oxide-bench: how does NVlabs/cuda-oxide v0.1.0 compare to CUDA C++?
+# cuda-exploration: how does NVlabs/cuda-oxide v0.1.0 compare to CUDA C++?
 
 > **TL;DR (3 bullets, hedged per Phase 8 review):**
 > 1. **At N=1024, cuda-oxide is statistically indistinguishable from nvcc on naive matmul** — all four naive kernels (oxide safe/unchecked/fmuladd, nvcc) hit 6.80-6.88 TFLOPS, within 1% of each other and within run-to-run noise. **Caveat:** at this size kernels run in 0.3 ms and ~5-50 µs of launch+timer overhead is a non-trivial fraction of measurement; this result is consistent with both "compiler equivalence" and "all kernels are launch-overhead-bound." At N=4096 (>20 ms kernel time) cuda-oxide naive is **0.85-0.91× of nvcc**, a real but modest gap.

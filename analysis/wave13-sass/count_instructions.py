@@ -4,7 +4,7 @@ import csv
 import re
 from pathlib import Path
 
-ROOT = Path("/home/codeseys/cuda-oxide-bench/analysis/wave13-sass")
+ROOT = Path("/home/codeseys/cuda-exploration/analysis/wave13-sass")
 
 # (sass-file-stem, impl-label, kernel-label)
 KERNELS = [

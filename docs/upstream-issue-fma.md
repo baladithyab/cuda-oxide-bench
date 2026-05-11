@@ -6,7 +6,7 @@ Generated PTX from cuda-oxide kernels contains **zero** `fma.rn.f32` instruction
 
 ## Repro
 
-Repo: <https://github.com/baladithyab/cuda-oxide-bench> @ `<COMMIT_HASH_TBD>`. Artifacts: `oxide-matmul/oxide_matmul.ptx`, `oxide-matmul-tiled/oxide_matmul_tiled.ptx` (cuda-oxide, `sm_120`); `cuda-matmul/matmul.ptx`, `cuda-matmul-tiled/matmul.ptx` (nvcc 13.2 `-O3 -arch=sm_120`); `docs/research/cuda-oxide-flags.md`; `results/scaling-summary.md`.
+Repo: <https://github.com/baladithyab/cuda-exploration> @ `<COMMIT_HASH_TBD>`. Artifacts: `oxide-matmul/oxide_matmul.ptx`, `oxide-matmul-tiled/oxide_matmul_tiled.ptx` (cuda-oxide, `sm_120`); `cuda-matmul/matmul.ptx`, `cuda-matmul-tiled/matmul.ptx` (nvcc 13.2 `-O3 -arch=sm_120`); `docs/research/cuda-oxide-flags.md`; `results/scaling-summary.md`.
 
 ## Evidence
 
@@ -45,8 +45,8 @@ Is there a path we missed — undocumented `RUSTFLAGS`, codegen flag, env var, o
 ## Repro commands
 
 ```bash
-git clone https://github.com/baladithyab/cuda-oxide-bench
-cd cuda-oxide-bench
+git clone https://github.com/baladithyab/cuda-exploration
+cd cuda-exploration
 cat docs/research/cuda-oxide-flags.md                          # full investigation
 grep -o 'fma\.rn\.f32' oxide-matmul/oxide_matmul.ptx | wc -l   # -> 0
 grep -o 'fma\.rn\.f32' cuda-matmul/matmul.ptx       | wc -l    # -> 15

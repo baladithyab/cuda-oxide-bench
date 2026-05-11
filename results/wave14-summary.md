@@ -94,7 +94,7 @@ Two issue MDs ready to submit at https://github.com/nvidia/cutile-python/issues:
 
 Both issues include full environment table, copyable Python reproducer,
 SASS instruction tables, independently-verifiable grep commands, and links
-back to https://github.com/baladithyab/cuda-oxide-bench. Tone is cooperative,
+back to https://github.com/baladithyab/cuda-exploration. Tone is cooperative,
 narrow, evidence-first.
 
 ## Independent verification by orchestrator (skepticism check on each subagent)
