@@ -1,0 +1,24 @@
+[gqa] device: NVIDIA GeForce RTX 5090 (sm_120)
+[gqa] inputs dir: /home/codeseys/cuda-exploration/analysis/wave15-attention-architecture/inputs
+[gqa] === correctness run (b=1 nq=4 nkv=2 s=128 d=64) ===
+[gqa] correctness: max_abs_err=1.559e-04 max_rel_err=3.095e+01 expected_max_abs=2.162e-01 => OK
+
+[gqa] === bench run (b=1 nq=32 nkv=8 s=2048 d=128) ===
+[gqa] alloc: Q=16.8 MB K=4.2 MB V=4.2 MB S=536.9 MB P=268.4 MB O=16.8 MB
+[gqa] flops/iter = 68.719 GFLOPS
+[gqa] iter=0 gpu_ms=3.7038 tflops=18.55
+[gqa] iter=1 gpu_ms=2.9361 tflops=23.40
+[gqa] iter=2 gpu_ms=2.9362 tflops=23.40
+[gqa] iter=3 gpu_ms=2.9417 tflops=23.36
+[gqa] iter=4 gpu_ms=2.9287 tflops=23.46
+[gqa] iter=5 gpu_ms=2.9417 tflops=23.36
+[gqa] iter=6 gpu_ms=2.9320 tflops=23.44
+[gqa] iter=7 gpu_ms=3.1982 tflops=21.49
+[gqa] iter=8 gpu_ms=2.9344 tflops=23.42
+[gqa] iter=9 gpu_ms=3.4475 tflops=19.93
+
+[gqa] ===== SUMMARY (llama3_8b) =====
+[gqa] best   gpu_ms = 2.9287  tflops = 23.46
+[gqa] median gpu_ms = 2.9390  tflops = 23.38
+[gqa] cuBLAS hgemm reference = 218.0 TF (from Wave 14.1)
+[gqa] fraction of hgemm peak = 10.8%

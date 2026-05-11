@@ -1,0 +1,4 @@
+attn_gqa
+*.o
+*.cubin
+*.ptx

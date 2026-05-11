@@ -1,0 +1,12 @@
+# Wave 15.1 cuTile attention-GQA: ignore venv + caches + cubins
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# JIT artifacts (cubins are large; .sass disassemblies kept as evidence)
+*.cubin
+*.fatbin
+*.ptx
+*.ll
+.cuda_tile_cache/

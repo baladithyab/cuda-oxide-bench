@@ -1,0 +1,41 @@
+[cublas-attn-gqa] device: NVIDIA GeForce RTX 5090 (sm_120)
+[cublas-attn-gqa] cuBLAS version: 13.4.0
+
+[cublas-attn-gqa] ===== shape=correctness B=1 S=128 n_q=4 n_kv=2 d=64 =====
+[cublas-attn-gqa] loading Q/K/V/expected ...
+[cublas-attn-gqa] Q: shape=(1,4,128,64) dtype=<f2
+[cublas-attn-gqa] K: shape=(1,2,128,64) dtype=<f2
+[cublas-attn-gqa] V: shape=(1,2,128,64) dtype=<f2
+[cublas-attn-gqa] Exp: shape=(1,4,128,64) dtype=<f4
+[cublas-attn-gqa] alloc: Q=0.1MB K=0.0MB V=0.0MB out=0.1MB scores=0.3MB probs=0.1MB
+[cublas-attn-gqa] warmup total=223.500ms (QKt=68.272 softmax=0.177 PV=155.051)
+[cublas-attn-gqa] correctness: max_abs=1.559e-04 max_rel=3.095e+01 bad=0/32768 (atol=5e-03 rtol=5e-03)
+[cublas-attn-gqa] correctness: OK
+[cublas-attn-gqa] shape=correctness iter=0 total=0.108ms QKt=0.074 softmax=0.016 PV=0.018 tflops=0.156
+[cublas-attn-gqa] shape=correctness iter=1 total=0.087ms QKt=0.017 softmax=0.004 PV=0.066 tflops=0.192
+[cublas-attn-gqa] shape=correctness iter=2 total=0.081ms QKt=0.011 softmax=0.007 PV=0.063 tflops=0.207
+[cublas-attn-gqa] shape=correctness SUMMARY best_total=0.081ms avg_total=0.092ms best_TF=0.207 avg_TF=0.182
+[cublas-attn-gqa] shape=correctness STAGES  avg_QKt=0.034ms(37.3%) avg_softmax=0.009ms(9.5%) avg_PV=0.049ms(53.2%)
+
+[cublas-attn-gqa] ===== shape=llama3_8b B=1 S=2048 n_q=32 n_kv=8 d=128 =====
+[cublas-attn-gqa] loading Q/K/V/expected ...
+[cublas-attn-gqa] Q: shape=(1,32,2048,128) dtype=<f2
+[cublas-attn-gqa] K: shape=(1,8,2048,128) dtype=<f2
+[cublas-attn-gqa] V: shape=(1,8,2048,128) dtype=<f2
+[cublas-attn-gqa] Exp: shape=(1,32,2048,128) dtype=<f4
+[cublas-attn-gqa] alloc: Q=16.8MB K=4.2MB V=4.2MB out=16.8MB scores=536.9MB probs=268.4MB
+[cublas-attn-gqa] warmup total=17.561ms (QKt=2.125 softmax=0.504 PV=14.932)
+[cublas-attn-gqa] correctness: max_abs=6.671e-05 max_rel=1.971e+01 bad=0/8388608 (atol=5e-03 rtol=5e-03)
+[cublas-attn-gqa] correctness: OK
+[cublas-attn-gqa] shape=llama3_8b iter=0 total=1.655ms QKt=0.506 softmax=0.503 PV=0.647 tflops=41.510
+[cublas-attn-gqa] shape=llama3_8b iter=1 total=1.691ms QKt=0.491 softmax=0.514 PV=0.687 tflops=40.641
+[cublas-attn-gqa] shape=llama3_8b iter=2 total=1.594ms QKt=0.479 softmax=0.503 PV=0.612 tflops=43.122
+[cublas-attn-gqa] shape=llama3_8b iter=3 total=1.615ms QKt=0.490 softmax=0.507 PV=0.617 tflops=42.556
+[cublas-attn-gqa] shape=llama3_8b iter=4 total=1.567ms QKt=0.491 softmax=0.503 PV=0.574 tflops=43.847
+[cublas-attn-gqa] shape=llama3_8b iter=5 total=1.588ms QKt=0.497 softmax=0.508 PV=0.583 tflops=43.272
+[cublas-attn-gqa] shape=llama3_8b iter=6 total=1.772ms QKt=0.642 softmax=0.507 PV=0.623 tflops=38.791
+[cublas-attn-gqa] shape=llama3_8b iter=7 total=1.595ms QKt=0.473 softmax=0.502 PV=0.620 tflops=43.079
+[cublas-attn-gqa] shape=llama3_8b iter=8 total=1.546ms QKt=0.484 softmax=0.504 PV=0.558 tflops=44.460
+[cublas-attn-gqa] shape=llama3_8b iter=9 total=1.574ms QKt=0.472 softmax=0.505 PV=0.598 tflops=43.652
+[cublas-attn-gqa] shape=llama3_8b SUMMARY best_total=1.546ms avg_total=1.620ms best_TF=44.460 avg_TF=42.428
+[cublas-attn-gqa] shape=llama3_8b STAGES  avg_QKt=0.502ms(31.0%) avg_softmax=0.506ms(31.2%) avg_PV=0.612ms(37.8%)

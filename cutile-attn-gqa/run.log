@@ -1,0 +1,50 @@
+=== smoke test (correctness shape) ===
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+
+[smoke] shape=correctness B=1 S=128 n_q=4 n_kv=2 d=64
+[smoke] BLOCK_M=32 BLOCK_N=32
+[smoke] max_abs=1.269e-04 rel=5.870e-04  atol=0.005 rtol=0.005  OK
+
+
+=== bench (Llama-3-8B shape) ===
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+
+[bench] shape=llama3_8b B=1 S=2048 n_q=32 n_kv=8 d=128
+[bench] BLOCK_M=64 BLOCK_N=64
+[bench] iter=0 gpu_ms=0.422 tflops=163.034
+[bench] iter=1 gpu_ms=0.418 tflops=164.457
+[bench] iter=2 gpu_ms=0.417 tflops=164.811
+[bench] iter=3 gpu_ms=0.417 tflops=164.988
+[bench] iter=4 gpu_ms=0.417 tflops=164.874
+[bench] iter=5 gpu_ms=0.417 tflops=164.823
+[bench] iter=6 gpu_ms=0.417 tflops=164.836
+[bench] iter=7 gpu_ms=0.416 tflops=165.166
+[bench] iter=8 gpu_ms=0.417 tflops=164.684
+[bench] iter=9 gpu_ms=0.415 tflops=165.471
+
+================================================================
+ BENCH SUMMARY — llama3_8b (B=1 S=2048 n_q=32 n_kv=8 d=128)
+   BLOCK_M=64 BLOCK_N=64 grid=(32, 32)
+   median : 0.417 ms   164.836 TFLOPS
+   best   : 0.415 ms   165.471 TFLOPS
+   cuBLAS hgemm peak (Wave 13): 218 TFLOPS  → ratio 75.90%
+================================================================
+
+
+=== cubin export for SASS inspection ===
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+
+Exporting cubin at bench shape for SASS inspection…
+  wrote gqa_fwd_fused.cubin  (483232 bytes)
+SASS lines : 12569
+HMMA insts : 256
+MUFU.EX2   : 68 (softmax exp)

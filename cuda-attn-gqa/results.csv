@@ -1,0 +1,11 @@
+impl,kernel,batch,seq,n_q,n_kv,d_head,iter,gpu_ms,tflops
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,0,2.933888,23.422666
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,1,2.928992,23.461818
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,2,2.944992,23.334350
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,3,3.153792,21.789477
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,4,2.931296,23.443376
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,5,3.693824,18.603885
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,6,2.946016,23.326240
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,7,2.928416,23.466433
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,8,3.175552,21.640168
+cuda-attn-gqa,3kernel_wmma,1,2048,32,8,128,9,2.934944,23.414238
