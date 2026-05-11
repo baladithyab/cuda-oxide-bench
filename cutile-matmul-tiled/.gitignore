@@ -1,0 +1,12 @@
+# Wave 12 cuTile axis: ignore the venv + caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# JIT artifacts
+*.cubin
+*.fatbin
+*.ptx
+*.ll
+.cuda_tile_cache/

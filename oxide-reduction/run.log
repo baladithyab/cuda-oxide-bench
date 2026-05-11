@@ -1,67 +1,42 @@
-=========================================
-RUSTC-CODEGEN-CUDA: oxide-reduction
-=========================================
-
-This is the proper cargo workflow:
-  RUSTFLAGS="-Z codegen-backend=..." cargo run
-
-Building and running oxide-reduction...
-
-   Compiling oxide-reduction v0.1.0 (/home/codeseys/cuda-oxide-bench/oxide-reduction)
-warning: `static mut cuda_oxide_kernel_246e25db_reduce_sum::PARTIALS` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
-  --> src/main.rs:64:18
-   |
-64 |         unsafe { PARTIALS[warp_id] = acc; }
-   |                  ^^^^^^^^
-
-warning: `static mut cuda_oxide_kernel_246e25db_reduce_sum::PARTIALS` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
-  --> src/main.rs:71:22
-   |
-71 |             unsafe { PARTIALS[lane] }
-   |                      ^^^^^^^^
-
-warning: `oxide-reduction` (bin "oxide-reduction") generated 2 warnings
-    Finished `release` profile [optimized] target(s) in 0.53s
-     Running `target/release/oxide-reduction`
 [oxide-reduction] sum-reduction sweep, block=256, grid=4096, 1 warmup + 10 iters per N
-[oxide-reduction] N=1048576 iter=0 gpu_ms=0.010 GB/s=407.1
-[oxide-reduction] N=1048576 iter=1 gpu_ms=0.008 GB/s=506.1
-[oxide-reduction] N=1048576 iter=2 gpu_ms=0.014 GB/s=291.9
-[oxide-reduction] N=1048576 iter=3 gpu_ms=0.030 GB/s=141.7
-[oxide-reduction] N=1048576 iter=4 gpu_ms=0.008 GB/s=498.4
-[oxide-reduction] N=1048576 iter=5 gpu_ms=0.010 GB/s=439.8
-[oxide-reduction] N=1048576 iter=6 gpu_ms=0.009 GB/s=487.3
-[oxide-reduction] N=1048576 iter=7 gpu_ms=0.021 GB/s=204.2
-[oxide-reduction] N=1048576 iter=8 gpu_ms=0.029 GB/s=142.9
-[oxide-reduction] N=1048576 iter=9 gpu_ms=0.047 GB/s=89.4
+[oxide-reduction] N=1048576 iter=0 gpu_ms=0.009 GB/s=444.3
+[oxide-reduction] N=1048576 iter=1 gpu_ms=0.014 GB/s=295.9
+[oxide-reduction] N=1048576 iter=2 gpu_ms=0.014 GB/s=296.5
+[oxide-reduction] N=1048576 iter=3 gpu_ms=0.016 GB/s=260.6
+[oxide-reduction] N=1048576 iter=4 gpu_ms=0.009 GB/s=468.1
+[oxide-reduction] N=1048576 iter=5 gpu_ms=0.015 GB/s=282.5
+[oxide-reduction] N=1048576 iter=6 gpu_ms=0.015 GB/s=280.7
+[oxide-reduction] N=1048576 iter=7 gpu_ms=0.015 GB/s=281.3
+[oxide-reduction] N=1048576 iter=8 gpu_ms=0.015 GB/s=281.9
+[oxide-reduction] N=1048576 iter=9 gpu_ms=0.015 GB/s=271.4
 [oxide-reduction] N=1048576  cpu_sum=31457.219018 gpu_sum=31457.302734 rel_err=2.661e-6
-[oxide-reduction] N=16777216 iter=0 gpu_ms=0.021 GB/s=3266.6
-[oxide-reduction] N=16777216 iter=1 gpu_ms=0.058 GB/s=1154.2
-[oxide-reduction] N=16777216 iter=2 gpu_ms=0.024 GB/s=2752.2
-[oxide-reduction] N=16777216 iter=3 gpu_ms=0.018 GB/s=3771.9
-[oxide-reduction] N=16777216 iter=4 gpu_ms=0.019 GB/s=3542.5
-[oxide-reduction] N=16777216 iter=5 gpu_ms=0.021 GB/s=3196.9
-[oxide-reduction] N=16777216 iter=6 gpu_ms=0.019 GB/s=3506.9
-[oxide-reduction] N=16777216 iter=7 gpu_ms=0.055 GB/s=1210.8
-[oxide-reduction] N=16777216 iter=8 gpu_ms=0.020 GB/s=3344.7
-[oxide-reduction] N=16777216 iter=9 gpu_ms=0.061 GB/s=1103.2
-[oxide-reduction] N=16777216  cpu_sum=503316.434286 gpu_sum=503314.593750 rel_err=3.657e-6
-[oxide-reduction] N=268435456 iter=0 gpu_ms=0.962 GB/s=1115.8
-[oxide-reduction] N=268435456 iter=1 gpu_ms=0.840 GB/s=1278.4
-[oxide-reduction] N=268435456 iter=2 gpu_ms=0.815 GB/s=1317.4
-[oxide-reduction] N=268435456 iter=3 gpu_ms=3.030 GB/s=354.4
-[oxide-reduction] N=268435456 iter=4 gpu_ms=0.907 GB/s=1183.7
-[oxide-reduction] N=268435456 iter=5 gpu_ms=0.740 GB/s=1451.2
-[oxide-reduction] N=268435456 iter=6 gpu_ms=1.515 GB/s=708.7
-[oxide-reduction] N=268435456 iter=7 gpu_ms=1.095 GB/s=980.8
-[oxide-reduction] N=268435456 iter=8 gpu_ms=0.775 GB/s=1386.1
-[oxide-reduction] N=268435456 iter=9 gpu_ms=2.555 GB/s=420.2
-[oxide-reduction] N=268435456  cpu_sum=8053063.378571 gpu_sum=8052866.500000 rel_err=2.445e-5
+[oxide-reduction] N=16777216 iter=0 gpu_ms=0.017 GB/s=3883.6
+[oxide-reduction] N=16777216 iter=1 gpu_ms=0.022 GB/s=3035.0
+[oxide-reduction] N=16777216 iter=2 gpu_ms=0.017 GB/s=3876.4
+[oxide-reduction] N=16777216 iter=3 gpu_ms=0.018 GB/s=3731.6
+[oxide-reduction] N=16777216 iter=4 gpu_ms=0.025 GB/s=2727.1
+[oxide-reduction] N=16777216 iter=5 gpu_ms=0.016 GB/s=4288.7
+[oxide-reduction] N=16777216 iter=6 gpu_ms=0.018 GB/s=3725.0
+[oxide-reduction] N=16777216 iter=7 gpu_ms=0.018 GB/s=3758.3
+[oxide-reduction] N=16777216 iter=8 gpu_ms=0.024 GB/s=2845.5
+[oxide-reduction] N=16777216 iter=9 gpu_ms=0.017 GB/s=3855.1
+[oxide-reduction] N=16777216  cpu_sum=503316.434286 gpu_sum=503314.562500 rel_err=3.719e-6
+[oxide-reduction] N=268435456 iter=0 gpu_ms=1.084 GB/s=990.4
+[oxide-reduction] N=268435456 iter=1 gpu_ms=0.713 GB/s=1505.3
+[oxide-reduction] N=268435456 iter=2 gpu_ms=0.713 GB/s=1506.4
+[oxide-reduction] N=268435456 iter=3 gpu_ms=0.729 GB/s=1473.0
+[oxide-reduction] N=268435456 iter=4 gpu_ms=0.715 GB/s=1502.3
+[oxide-reduction] N=268435456 iter=5 gpu_ms=0.708 GB/s=1516.9
+[oxide-reduction] N=268435456 iter=6 gpu_ms=0.714 GB/s=1504.1
+[oxide-reduction] N=268435456 iter=7 gpu_ms=0.718 GB/s=1495.2
+[oxide-reduction] N=268435456 iter=8 gpu_ms=0.739 GB/s=1453.3
+[oxide-reduction] N=268435456 iter=9 gpu_ms=0.707 GB/s=1519.1
+[oxide-reduction] N=268435456  cpu_sum=8053063.378571 gpu_sum=8052865.500000 rel_err=2.457e-5
 
 ================== SUMMARY ==================
 N_elems               best_ms         med_ms      best_GB/s       med_GB/s      rel_err
 ------------------------------------------------------------------------------------
-1048576                 0.008          0.014          506.1          291.9     2.661e-6
-16777216                0.018          0.021         3771.9         3196.9     3.657e-6
-268435456               0.740          0.962         1451.2         1115.8     2.445e-5
+1048576                 0.009          0.015          468.1          281.9     2.661e-6
+16777216                0.016          0.018         4288.7         3731.6     3.719e-6
+268435456               0.707          0.715         1519.1         1502.3     2.457e-5
 =============================================

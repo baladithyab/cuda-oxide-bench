@@ -1,0 +1,8 @@
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+TILE_SIZE: 1024
+
+[smoke] N=1048576 cpu_sum=524116.000000 gpu_sum=524115.968750 rel_err=5.962e-08
+OK

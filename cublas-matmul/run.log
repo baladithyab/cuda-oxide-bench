@@ -2,46 +2,46 @@
 [cublas] version: 13.4.0
 [cublas] math mode: CUBLAS_PEDANTIC_MATH (strict f32, no TF32)
 [cublas] N=1024 sgemm f32, 2.15 GFLOP/iter
-[cublas] N=1024 iter=0 gpu_ms=0.058 tflops=37.303
-[cublas] N=1024 iter=1 gpu_ms=0.077 tflops=28.056
-[cublas] N=1024 iter=2 gpu_ms=0.067 tflops=31.911
-[cublas] N=1024 iter=3 gpu_ms=0.065 tflops=32.832
-[cublas] N=1024 iter=4 gpu_ms=0.063 tflops=34.204
-[cublas] N=1024 iter=5 gpu_ms=0.063 tflops=34.031
-[cublas] N=1024 iter=6 gpu_ms=0.063 tflops=34.327
-[cublas] N=1024 iter=7 gpu_ms=0.063 tflops=33.945
-[cublas] N=1024 iter=8 gpu_ms=0.063 tflops=34.031
-[cublas] N=1024 iter=9 gpu_ms=0.067 tflops=32.202
+[cublas] N=1024 iter=0 gpu_ms=0.079 tflops=27.269
+[cublas] N=1024 iter=1 gpu_ms=0.056 tflops=38.173
+[cublas] N=1024 iter=2 gpu_ms=0.060 tflops=36.022
+[cublas] N=1024 iter=3 gpu_ms=0.057 tflops=37.723
+[cublas] N=1024 iter=4 gpu_ms=0.057 tflops=37.787
+[cublas] N=1024 iter=5 gpu_ms=0.056 tflops=38.065
+[cublas] N=1024 iter=6 gpu_ms=0.056 tflops=38.130
+[cublas] N=1024 iter=7 gpu_ms=0.057 tflops=37.958
+[cublas] N=1024 iter=8 gpu_ms=0.058 tflops=37.097
+[cublas] N=1024 iter=9 gpu_ms=0.056 tflops=38.022
 [cublas] N=1024 check (0,0): got=1.5333 want=1.5333 rel=3.110e-07 OK
 [cublas] N=1024 check (512,512): got=1.5381 want=1.5381 rel=3.100e-07 OK
 [cublas] N=1024 check (1023,1023): got=1.5336 want=1.5336 rel=1.555e-07 OK
 [cublas] N=1024 correctness: 3/3 OK
 [cublas] N=2048 sgemm f32, 17.18 GFLOP/iter
-[cublas] N=2048 iter=0 gpu_ms=0.289 tflops=59.533
-[cublas] N=2048 iter=1 gpu_ms=0.268 tflops=64.005
-[cublas] N=2048 iter=2 gpu_ms=0.274 tflops=62.623
-[cublas] N=2048 iter=3 gpu_ms=0.272 tflops=63.213
-[cublas] N=2048 iter=4 gpu_ms=0.276 tflops=62.246
-[cublas] N=2048 iter=5 gpu_ms=0.262 tflops=65.576
-[cublas] N=2048 iter=6 gpu_ms=0.275 tflops=62.434
-[cublas] N=2048 iter=7 gpu_ms=0.273 tflops=62.976
-[cublas] N=2048 iter=8 gpu_ms=0.271 tflops=63.333
-[cublas] N=2048 iter=9 gpu_ms=0.265 tflops=64.730
+[cublas] N=2048 iter=0 gpu_ms=0.306 tflops=56.205
+[cublas] N=2048 iter=1 gpu_ms=0.289 tflops=59.520
+[cublas] N=2048 iter=2 gpu_ms=0.279 tflops=61.490
+[cublas] N=2048 iter=3 gpu_ms=0.265 tflops=64.761
+[cublas] N=2048 iter=4 gpu_ms=0.266 tflops=64.543
+[cublas] N=2048 iter=5 gpu_ms=0.266 tflops=64.605
+[cublas] N=2048 iter=6 gpu_ms=0.269 tflops=63.883
+[cublas] N=2048 iter=7 gpu_ms=0.268 tflops=64.165
+[cublas] N=2048 iter=8 gpu_ms=0.266 tflops=64.590
+[cublas] N=2048 iter=9 gpu_ms=0.269 tflops=63.777
 [cublas] N=2048 check (0,0): got=3.0674 want=3.0674 rel=7.773e-08 OK
 [cublas] N=2048 check (1024,1024): got=3.0686 want=3.0686 rel=0.000e+00 OK
 [cublas] N=2048 check (2047,2047): got=3.0721 want=3.0721 rel=0.000e+00 OK
 [cublas] N=2048 correctness: 3/3 OK
 [cublas] N=4096 sgemm f32, 137.44 GFLOP/iter
-[cublas] N=4096 iter=0 gpu_ms=1.931 tflops=71.164
-[cublas] N=4096 iter=1 gpu_ms=2.698 tflops=50.949
-[cublas] N=4096 iter=2 gpu_ms=2.260 tflops=60.806
-[cublas] N=4096 iter=3 gpu_ms=2.205 tflops=62.337
-[cublas] N=4096 iter=4 gpu_ms=2.365 tflops=58.109
-[cublas] N=4096 iter=5 gpu_ms=1.889 tflops=72.744
-[cublas] N=4096 iter=6 gpu_ms=2.863 tflops=48.010
-[cublas] N=4096 iter=7 gpu_ms=2.297 tflops=59.833
-[cublas] N=4096 iter=8 gpu_ms=1.913 tflops=71.840
-[cublas] N=4096 iter=9 gpu_ms=3.256 tflops=42.213
+[cublas] N=4096 iter=0 gpu_ms=1.902 tflops=72.260
+[cublas] N=4096 iter=1 gpu_ms=2.149 tflops=63.966
+[cublas] N=4096 iter=2 gpu_ms=1.868 tflops=73.588
+[cublas] N=4096 iter=3 gpu_ms=1.908 tflops=72.034
+[cublas] N=4096 iter=4 gpu_ms=1.887 tflops=72.826
+[cublas] N=4096 iter=5 gpu_ms=1.886 tflops=72.883
+[cublas] N=4096 iter=6 gpu_ms=2.716 tflops=50.611
+[cublas] N=4096 iter=7 gpu_ms=1.892 tflops=72.635
+[cublas] N=4096 iter=8 gpu_ms=1.911 tflops=71.933
+[cublas] N=4096 iter=9 gpu_ms=1.883 tflops=72.992
 [cublas] N=4096 check (0,0): got=6.1420 want=6.1420 rel=6.987e-07 OK
 [cublas] N=4096 check (2048,2048): got=6.1455 want=6.1455 rel=8.535e-07 OK
 [cublas] N=4096 check (4095,4095): got=6.1392 want=6.1392 rel=7.767e-07 OK
@@ -49,7 +49,7 @@
 
 [cublas] ===== SUMMARY =====
 [cublas]      N     best_ms   median_ms     best_TF   median_TF
-[cublas]   1024       0.058       0.063      37.303      33.988
-[cublas]   2048       0.262       0.272      65.576      63.094
-[cublas]   4096       1.889       2.279      72.744      60.315
+[cublas]   1024       0.056       0.057      38.173      37.872
+[cublas]   2048       0.265       0.268      64.761      64.024
+[cublas]   4096       1.868       1.897      73.588      72.447
 [cublas] correctness: 9/9 OK

@@ -1,58 +1,45 @@
-# cuda-matmul Wave 1 W1B run log
-# build cmd: /usr/local/cuda/bin/nvcc -ccbin clang-14 -O3 -arch=sm_120 -o cuda-matmul/matmul cuda-matmul/matmul.cu -lstdc++
-# ptx cmd:   /usr/local/cuda/bin/nvcc -ccbin clang-14 -O3 -arch=sm_120 -ptx -o cuda-matmul/matmul.ptx cuda-matmul/matmul.cu
-# nvcc --version:
-#   nvcc: NVIDIA (R) Cuda compiler driver
-#   Copyright (c) 2005-2026 NVIDIA Corporation
-#   Built on Thu_Mar_19_11:12:51_PM_PDT_2026
-#   Cuda compilation tools, release 13.2, V13.2.78
-#   Build cuda_13.2.r13.2/compiler.37668154_0
-# date: 2026-05-09T06:35:23Z
-# arch: sm_120 (native, per ADR-0002)
-# note: -lstdc++ added because -ccbin clang-14 doesn't auto-link libstdc++
-# ---
 [cuda] device: NVIDIA GeForce RTX 5090 (sm_120)
 [cuda] N=1024 matmul f32, 2.15 GFLOP/iter
-[cuda] N=1024 iter=0 gpu_ms=0.316 tflops=6.806
-[cuda] N=1024 iter=1 gpu_ms=0.309 tflops=6.941
-[cuda] N=1024 iter=2 gpu_ms=0.309 tflops=6.951
-[cuda] N=1024 iter=3 gpu_ms=0.310 tflops=6.923
-[cuda] N=1024 iter=4 gpu_ms=0.310 tflops=6.922
-[cuda] N=1024 iter=5 gpu_ms=0.311 tflops=6.902
-[cuda] N=1024 iter=6 gpu_ms=0.312 tflops=6.879
-[cuda] N=1024 iter=7 gpu_ms=0.325 tflops=6.614
-[cuda] N=1024 iter=8 gpu_ms=0.313 tflops=6.869
-[cuda] N=1024 iter=9 gpu_ms=0.313 tflops=6.862
+[cuda] N=1024 iter=0 gpu_ms=0.313 tflops=6.863
+[cuda] N=1024 iter=1 gpu_ms=0.309 tflops=6.956
+[cuda] N=1024 iter=2 gpu_ms=0.307 tflops=6.991
+[cuda] N=1024 iter=3 gpu_ms=0.309 tflops=6.950
+[cuda] N=1024 iter=4 gpu_ms=0.309 tflops=6.953
+[cuda] N=1024 iter=5 gpu_ms=0.309 tflops=6.954
+[cuda] N=1024 iter=6 gpu_ms=0.308 tflops=6.964
+[cuda] N=1024 iter=7 gpu_ms=0.307 tflops=6.997
+[cuda] N=1024 iter=8 gpu_ms=0.305 tflops=7.030
+[cuda] N=1024 iter=9 gpu_ms=0.307 tflops=6.994
 [cuda] N=1024 check (0,0): got=1.5333 want=1.5333 rel=8.552e-07 OK
 [cuda] N=1024 check (512,512): got=1.5381 want=1.5381 rel=6.200e-07 OK
 [cuda] N=1024 check (1023,1023): got=1.5336 want=1.5336 rel=6.219e-07 OK
 [cuda] N=1024 correctness: 3/3 OK
 [cuda] N=2048 matmul f32, 17.18 GFLOP/iter
-[cuda] N=2048 iter=0 gpu_ms=2.714 tflops=6.330
-[cuda] N=2048 iter=1 gpu_ms=3.193 tflops=5.380
-[cuda] N=2048 iter=2 gpu_ms=2.715 tflops=6.328
-[cuda] N=2048 iter=3 gpu_ms=3.180 tflops=5.403
-[cuda] N=2048 iter=4 gpu_ms=2.706 tflops=6.349
-[cuda] N=2048 iter=5 gpu_ms=3.199 tflops=5.370
-[cuda] N=2048 iter=6 gpu_ms=2.331 tflops=7.370
-[cuda] N=2048 iter=7 gpu_ms=2.320 tflops=7.407
-[cuda] N=2048 iter=8 gpu_ms=3.644 tflops=4.715
-[cuda] N=2048 iter=9 gpu_ms=2.341 tflops=7.338
+[cuda] N=2048 iter=0 gpu_ms=2.334 tflops=7.359
+[cuda] N=2048 iter=1 gpu_ms=2.317 tflops=7.414
+[cuda] N=2048 iter=2 gpu_ms=2.316 tflops=7.418
+[cuda] N=2048 iter=3 gpu_ms=2.312 tflops=7.430
+[cuda] N=2048 iter=4 gpu_ms=2.313 tflops=7.429
+[cuda] N=2048 iter=5 gpu_ms=2.337 tflops=7.352
+[cuda] N=2048 iter=6 gpu_ms=3.145 tflops=5.463
+[cuda] N=2048 iter=7 gpu_ms=2.331 tflops=7.370
+[cuda] N=2048 iter=8 gpu_ms=2.313 tflops=7.429
+[cuda] N=2048 iter=9 gpu_ms=2.698 tflops=6.367
 [cuda] N=2048 check (0,0): got=3.0674 want=3.0674 rel=1.244e-06 OK
 [cuda] N=2048 check (1024,1024): got=3.0686 want=3.0686 rel=1.243e-06 OK
 [cuda] N=2048 check (2047,2047): got=3.0721 want=3.0721 rel=1.397e-06 OK
 [cuda] N=2048 correctness: 3/3 OK
 [cuda] N=4096 matmul f32, 137.44 GFLOP/iter
-[cuda] N=4096 iter=0 gpu_ms=22.159 tflops=6.202
-[cuda] N=4096 iter=1 gpu_ms=25.179 tflops=5.458
-[cuda] N=4096 iter=2 gpu_ms=22.465 tflops=6.118
-[cuda] N=4096 iter=3 gpu_ms=22.057 tflops=6.231
-[cuda] N=4096 iter=4 gpu_ms=22.580 tflops=6.087
-[cuda] N=4096 iter=5 gpu_ms=20.955 tflops=6.559
-[cuda] N=4096 iter=6 gpu_ms=20.351 tflops=6.754
-[cuda] N=4096 iter=7 gpu_ms=19.423 tflops=7.076
-[cuda] N=4096 iter=8 gpu_ms=19.530 tflops=7.037
-[cuda] N=4096 iter=9 gpu_ms=20.289 tflops=6.774
+[cuda] N=4096 iter=0 gpu_ms=19.965 tflops=6.884
+[cuda] N=4096 iter=1 gpu_ms=19.130 tflops=7.184
+[cuda] N=4096 iter=2 gpu_ms=19.672 tflops=6.986
+[cuda] N=4096 iter=3 gpu_ms=19.889 tflops=6.910
+[cuda] N=4096 iter=4 gpu_ms=18.917 tflops=7.265
+[cuda] N=4096 iter=5 gpu_ms=20.066 tflops=6.849
+[cuda] N=4096 iter=6 gpu_ms=19.044 tflops=7.217
+[cuda] N=4096 iter=7 gpu_ms=21.868 tflops=6.285
+[cuda] N=4096 iter=8 gpu_ms=21.930 tflops=6.267
+[cuda] N=4096 iter=9 gpu_ms=19.653 tflops=6.993
 [cuda] N=4096 check (0,0): got=6.1420 want=6.1420 rel=2.640e-06 OK
 [cuda] N=4096 check (2048,2048): got=6.1455 want=6.1455 rel=2.483e-06 OK
 [cuda] N=4096 check (4095,4095): got=6.1392 want=6.1392 rel=2.408e-06 OK
@@ -60,6 +47,6 @@
 
 [cuda] ===== SUMMARY =====
 [cuda]      N     best_ms   median_ms     best_TF   median_TF
-[cuda]   1024       0.309       0.312       6.951       6.891
-[cuda]   2048       2.320       2.715       7.407       6.329
-[cuda]   4096      19.423      21.506       7.076       6.391
+[cuda]   1024       0.305       0.309       7.030       6.960
+[cuda]   2048       2.312       2.324       7.430       7.392
+[cuda]   4096      18.917      19.780       7.265       6.948

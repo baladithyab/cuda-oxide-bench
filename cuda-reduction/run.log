@@ -1,42 +1,42 @@
 [cuda-reduction] sum-reduction sweep, block=256, 1 warmup + 10 iters per N
-[cuda-reduction] N=1048576 iter=0 gpu_ms=0.011 GB/s=396.0
-[cuda-reduction] N=1048576 iter=1 gpu_ms=0.010 GB/s=431.2
-[cuda-reduction] N=1048576 iter=2 gpu_ms=0.011 GB/s=396.0
-[cuda-reduction] N=1048576 iter=3 gpu_ms=0.014 GB/s=297.2
-[cuda-reduction] N=1048576 iter=4 gpu_ms=0.010 GB/s=426.9
-[cuda-reduction] N=1048576 iter=5 gpu_ms=0.013 GB/s=319.7
-[cuda-reduction] N=1048576 iter=6 gpu_ms=0.013 GB/s=331.0
-[cuda-reduction] N=1048576 iter=7 gpu_ms=0.009 GB/s=453.5
-[cuda-reduction] N=1048576 iter=8 gpu_ms=0.013 GB/s=318.9
-[cuda-reduction] N=1048576 iter=9 gpu_ms=0.010 GB/s=418.8
-[cuda-reduction] N=1048576  cpu_sum=31457.219018 gpu_sum=31457.304688 rel_err=2.723e-06
-[cuda-reduction] N=16777216 iter=0 gpu_ms=0.016 GB/s=4088.0
-[cuda-reduction] N=16777216 iter=1 gpu_ms=0.019 GB/s=3542.5
-[cuda-reduction] N=16777216 iter=2 gpu_ms=0.018 GB/s=3672.8
-[cuda-reduction] N=16777216 iter=3 gpu_ms=0.016 GB/s=4144.6
-[cuda-reduction] N=16777216 iter=4 gpu_ms=0.017 GB/s=3956.9
-[cuda-reduction] N=16777216 iter=5 gpu_ms=0.039 GB/s=1724.6
-[cuda-reduction] N=16777216 iter=6 gpu_ms=0.020 GB/s=3350.1
-[cuda-reduction] N=16777216 iter=7 gpu_ms=0.021 GB/s=3206.7
-[cuda-reduction] N=16777216 iter=8 gpu_ms=0.021 GB/s=3163.1
-[cuda-reduction] N=16777216 iter=9 gpu_ms=0.017 GB/s=4017.5
-[cuda-reduction] N=16777216  cpu_sum=503316.434286 gpu_sum=503314.531250 rel_err=3.781e-06
-[cuda-reduction] N=268435456 iter=0 gpu_ms=0.708 GB/s=1516.4
-[cuda-reduction] N=268435456 iter=1 gpu_ms=0.963 GB/s=1115.3
-[cuda-reduction] N=268435456 iter=2 gpu_ms=1.069 GB/s=1004.4
-[cuda-reduction] N=268435456 iter=3 gpu_ms=0.718 GB/s=1496.3
-[cuda-reduction] N=268435456 iter=4 gpu_ms=0.739 GB/s=1452.6
-[cuda-reduction] N=268435456 iter=5 gpu_ms=0.709 GB/s=1515.4
-[cuda-reduction] N=268435456 iter=6 gpu_ms=0.708 GB/s=1516.9
-[cuda-reduction] N=268435456 iter=7 gpu_ms=0.711 GB/s=1511.0
-[cuda-reduction] N=268435456 iter=8 gpu_ms=0.713 GB/s=1505.2
-[cuda-reduction] N=268435456 iter=9 gpu_ms=0.711 GB/s=1510.9
+[cuda-reduction] N=1048576 iter=0 gpu_ms=0.015 GB/s=273.6
+[cuda-reduction] N=1048576 iter=1 gpu_ms=0.009 GB/s=466.4
+[cuda-reduction] N=1048576 iter=2 gpu_ms=0.014 GB/s=295.2
+[cuda-reduction] N=1048576 iter=3 gpu_ms=0.009 GB/s=487.3
+[cuda-reduction] N=1048576 iter=4 gpu_ms=0.015 GB/s=283.7
+[cuda-reduction] N=1048576 iter=5 gpu_ms=0.010 GB/s=431.2
+[cuda-reduction] N=1048576 iter=6 gpu_ms=0.030 GB/s=140.5
+[cuda-reduction] N=1048576 iter=7 gpu_ms=0.009 GB/s=455.1
+[cuda-reduction] N=1048576 iter=8 gpu_ms=0.014 GB/s=294.5
+[cuda-reduction] N=1048576 iter=9 gpu_ms=0.015 GB/s=285.6
+[cuda-reduction] N=1048576  cpu_sum=31457.219018 gpu_sum=31457.298828 rel_err=2.537e-06
+[cuda-reduction] N=16777216 iter=0 gpu_ms=0.024 GB/s=2822.5
+[cuda-reduction] N=16777216 iter=1 gpu_ms=0.017 GB/s=3971.9
+[cuda-reduction] N=16777216 iter=2 gpu_ms=0.037 GB/s=1800.1
+[cuda-reduction] N=16777216 iter=3 gpu_ms=0.016 GB/s=4177.6
+[cuda-reduction] N=16777216 iter=4 gpu_ms=0.016 GB/s=4185.9
+[cuda-reduction] N=16777216 iter=5 gpu_ms=0.015 GB/s=4333.0
+[cuda-reduction] N=16777216 iter=6 gpu_ms=0.033 GB/s=2018.4
+[cuda-reduction] N=16777216 iter=7 gpu_ms=0.017 GB/s=4064.2
+[cuda-reduction] N=16777216 iter=8 gpu_ms=0.017 GB/s=3956.9
+[cuda-reduction] N=16777216 iter=9 gpu_ms=0.022 GB/s=3075.0
+[cuda-reduction] N=16777216  cpu_sum=503316.434286 gpu_sum=503314.625000 rel_err=3.595e-06
+[cuda-reduction] N=268435456 iter=0 gpu_ms=0.707 GB/s=1518.4
+[cuda-reduction] N=268435456 iter=1 gpu_ms=0.706 GB/s=1521.9
+[cuda-reduction] N=268435456 iter=2 gpu_ms=0.709 GB/s=1513.8
+[cuda-reduction] N=268435456 iter=3 gpu_ms=0.713 GB/s=1506.4
+[cuda-reduction] N=268435456 iter=4 gpu_ms=0.714 GB/s=1504.6
+[cuda-reduction] N=268435456 iter=5 gpu_ms=0.716 GB/s=1498.6
+[cuda-reduction] N=268435456 iter=6 gpu_ms=0.708 GB/s=1515.9
+[cuda-reduction] N=268435456 iter=7 gpu_ms=0.712 GB/s=1507.6
+[cuda-reduction] N=268435456 iter=8 gpu_ms=0.712 GB/s=1507.8
+[cuda-reduction] N=268435456 iter=9 gpu_ms=0.707 GB/s=1518.7
 [cuda-reduction] N=268435456  cpu_sum=8053063.378571 gpu_sum=8052865.000000 rel_err=2.463e-05
 
 ================== SUMMARY ==================
 N_elems               best_ms         med_ms      best_GB/s       med_GB/s      rel_err
 ------------------------------------------------------------------------------------
-1048576                 0.009          0.011          453.5          396.0    2.723e-06
-16777216                0.016          0.019         4144.6         3542.5    3.781e-06
-268435456               0.708          0.713         1516.9         1505.2    2.463e-05
+1048576                 0.009          0.014          487.3          294.5    2.537e-06
+16777216                0.015          0.017         4333.0         3956.9    3.595e-06
+268435456               0.706          0.712         1521.9         1507.8    2.463e-05
 =============================================

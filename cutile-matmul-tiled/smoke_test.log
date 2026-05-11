@@ -1,0 +1,15 @@
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+BM=128 BN=128 BK=16  SIMPLE_TILE=16
+correctness N=512
+
+[cutile-matmul_tiled] N=512 BM=128 BN=128 BK=16  max_abs_err=6.104e-05 rel_err=4.005e-07  OK
+[cutile-matmul_tiled_simple] N=512 TS=16  max_abs_err=6.104e-05 rel_err=4.005e-07  OK
+
+================================================
+  matmul_tiled: PASS
+  matmul_tiled_simple: PASS
+================================================
+SMOKE TEST OK

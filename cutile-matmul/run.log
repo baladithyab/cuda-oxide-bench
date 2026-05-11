@@ -1,0 +1,45 @@
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+sizes: [1024, 2048, 4096]
+warmup: 1, iters: 10
+
+---- N = 1024 ----
+[cutile-naive] N=1024 iter=0 gpu_ms=1.1538 TFLOPS=1.861
+[cutile-naive] N=1024 iter=1 gpu_ms=1.3780 TFLOPS=1.558
+[cutile-naive] N=1024 iter=2 gpu_ms=1.1266 TFLOPS=1.906
+[cutile-naive] N=1024 iter=3 gpu_ms=1.1215 TFLOPS=1.915
+[cutile-naive] N=1024 iter=4 gpu_ms=1.1274 TFLOPS=1.905
+[cutile-naive] N=1024 iter=5 gpu_ms=1.1204 TFLOPS=1.917
+[cutile-naive] N=1024 iter=6 gpu_ms=1.1268 TFLOPS=1.906
+[cutile-naive] N=1024 iter=7 gpu_ms=1.1253 TFLOPS=1.908
+[cutile-naive] N=1024 iter=8 gpu_ms=1.1200 TFLOPS=1.917
+[cutile-naive] N=1024 iter=9 gpu_ms=1.5802 TFLOPS=1.359
+[cutile-naive] N=1024 correctness OK  best=1.120ms med=1.127ms (1.906 TFLOPS median)
+---- N = 2048 ----
+[cutile-naive] N=2048 iter=0 gpu_ms=8.6498 TFLOPS=1.986
+[cutile-naive] N=2048 iter=1 gpu_ms=9.5784 TFLOPS=1.794
+[cutile-naive] N=2048 iter=2 gpu_ms=8.6840 TFLOPS=1.978
+[cutile-naive] N=2048 iter=3 gpu_ms=8.9326 TFLOPS=1.923
+[cutile-naive] N=2048 iter=4 gpu_ms=9.1297 TFLOPS=1.882
+[cutile-naive] N=2048 iter=5 gpu_ms=9.3876 TFLOPS=1.830
+[cutile-naive] N=2048 iter=6 gpu_ms=8.8742 TFLOPS=1.936
+[cutile-naive] N=2048 iter=7 gpu_ms=8.6852 TFLOPS=1.978
+[cutile-naive] N=2048 iter=8 gpu_ms=9.0937 TFLOPS=1.889
+[cutile-naive] N=2048 iter=9 gpu_ms=9.3860 TFLOPS=1.830
+[cutile-naive] N=2048 correctness OK  best=8.650ms med=9.013ms (1.906 TFLOPS median)
+---- N = 4096 ----
+[cutile-naive] N=4096 iter=0 gpu_ms=71.9262 TFLOPS=1.911
+[cutile-naive] N=4096 iter=1 gpu_ms=71.1941 TFLOPS=1.930
+[cutile-naive] N=4096 iter=2 gpu_ms=71.7157 TFLOPS=1.916
+[cutile-naive] N=4096 iter=3 gpu_ms=71.6900 TFLOPS=1.917
+[cutile-naive] N=4096 iter=4 gpu_ms=71.2682 TFLOPS=1.928
+[cutile-naive] N=4096 iter=5 gpu_ms=74.8629 TFLOPS=1.836
+[cutile-naive] N=4096 iter=6 gpu_ms=72.7486 TFLOPS=1.889
+[cutile-naive] N=4096 iter=7 gpu_ms=70.3044 TFLOPS=1.955
+[cutile-naive] N=4096 iter=8 gpu_ms=73.6449 TFLOPS=1.866
+[cutile-naive] N=4096 iter=9 gpu_ms=73.9090 TFLOPS=1.860
+[cutile-naive] N=4096 correctness OK  best=70.304ms med=71.821ms (1.914 TFLOPS median)
+
+Results written to results.csv
