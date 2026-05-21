@@ -20,11 +20,12 @@ Latest waves added the cuTile axis (NVIDIA's Python tile DSL) and cuBLAS half-pr
 
 | impl | vec-add 256M (GB/s) | reduce_sum 256M (GB/s) |
 |---|---:|---:|
-| nvcc | 1568 | 1522 |
-| cuda-oxide | 1573 | 1519 |
-| **cutile** | 1559 (99%) | **1696 (+11%)** ⚡ |
+| nvcc | 1404-1568 | 1605 |
+| cuda-oxide | 1572-1575 | 1507-1519 |
+| **cutile** | 1565 (≈parity) | **1691 (+12%)** ⚡ |
+| **mojo** *(Wave 18)* | **1572 (≈parity)** | **1502 (≈parity)** |
 
-cuTile wins reduction via TMA bulk loads (`UTMALDG.1D` × 7 in cuTile cubin, 0 in nvcc / oxide). Same FP work, different memory strategy. Verified at SASS level — see [`analysis/wave13-sass/REDUCTION_SASS_DIFF.md`](analysis/wave13-sass/REDUCTION_SASS_DIFF.md).
+cuTile wins reduction via TMA bulk loads (`UTMALDG.1D` × 7 in cuTile cubin, **0 in nvcc / oxide / mojo**). Same FP work, different memory strategy. Mojo's stdlib `block.sum` lowers to the warp-shuffle path on sm_120 — see [`results/wave18-summary.md`](results/wave18-summary.md) and [`mojo-reduction/ANALYSIS.md`](mojo-reduction/ANALYSIS.md). Per-kernel SASS verified at [`analysis/wave13-sass/REDUCTION_SASS_DIFF.md`](analysis/wave13-sass/REDUCTION_SASS_DIFF.md).
 
 ### Compute-bound matmul (TFLOPS, the full picture)
 
@@ -43,16 +44,17 @@ cuTile wins reduction via TMA bulk loads (`UTMALDG.1D` × 7 in cuTile cubin, 0 i
 
 ### What the user-facing read becomes
 
-If you're choosing a Python-first / Rust-first GPU compute frontend on Blackwell **today** (May 2026):
+If you're choosing a Python-first / Rust-first / multi-vendor GPU compute frontend on Blackwell **today** (May 2026):
 
 - **Half-precision matmul** → cuTile with `ct.mma`(f16/bf16/tf32, f32 acc). 79% of cuBLAS, one Python decorator.
 - **f32 matmul peak** → cuBLAS sgemm with TF32 mode (104 TF) or pedantic IEEE (74 TF).
-- **Reduction-pattern memory work** → cuTile (`ct.sum` lowers to TMA bulk loads).
-- **Vec-add / streaming memory** → any of the three; parity within 1%.
+- **Reduction-pattern memory work** → cuTile (`ct.sum` lowers to TMA bulk loads on sm_120). Mojo's `block.sum` is a one-line stdlib alternative if you don't need TMA.
+- **Vec-add / streaming memory** → any of nvcc / cuda-oxide / cuTile / Mojo; parity within 1% at ~90% of HBM peak.
 - **Naive (no-TC) matmul or non-trivial Rust kernels (3DGS, etc.)** → cuda-oxide.
+- **Multi-vendor portability (NVIDIA + AMD + Apple from one source)** → Mojo (untested vs cross-vendor in this repo, but officially supported).
 - **Bit-exact f32 with no MMA** → cuda-oxide register-microtile (45 TF) or cuBLAS pedantic.
 
-Per-wave details: [Wave 12 SUMMARY](results/wave12-summary.md) (cuTile axis added), [Wave 13](results/wave13-summary.md) (dtype falsification + SASS), [Wave 14](results/wave14-summary.md) (cuBLAS half-precision + cuda-oxide TC verdict).
+Per-wave details: [Wave 12 SUMMARY](results/wave12-summary.md) (cuTile axis added), [Wave 13](results/wave13-summary.md) (dtype falsification + SASS), [Wave 14](results/wave14-summary.md) (cuBLAS half-precision + cuda-oxide TC verdict), **[Wave 18](results/wave18-summary.md) (Mojo as a fifth frontend, memory-bound axis)**.
 
 ---
 
