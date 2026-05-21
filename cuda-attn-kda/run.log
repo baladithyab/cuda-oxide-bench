@@ -1,0 +1,13 @@
+[kda] device: NVIDIA GeForce RTX 5090 (sm_120)
+[kda] inputs dir: /home/codeseys/cuda-exploration/analysis/wave15-attention-architecture/inputs
+[kda] === correctness run (B=1 H=2 d_k=64 d_v=64) ===
+[kda] o    max_abs=0.000e+00 |want|max=4.102e-01   OK
+[kda] Sout max_abs=5.960e-08 |want|max=7.135e-01   OK
+
+[kda] === shape smoke kimi_linear_decode (B=1 H=32 d_k=128 d_v=128) ===
+[kda] (kimi_linear_decode) o    max_abs=1.192e-07   OK (atol=5e-03)
+[kda] (kimi_linear_decode) Sout max_abs=5.960e-08   OK (atol=5e-03)
+
+[kda] === shape smoke large (B=4 H=64 d_k=256 d_v=256) ===
+[kda] (large) o    max_abs=1.221e-04   OK (atol=1e-02)
+[kda] (large) Sout max_abs=5.960e-08   OK (atol=1e-02)

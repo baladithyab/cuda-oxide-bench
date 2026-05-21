@@ -1,0 +1,29 @@
+[kda-bench] device: NVIDIA GeForce RTX 5090 (sm_120)
+[kda-bench] shape=kimi_linear_decode B=1 H=32 d_k=128 d_v=128  warmup=2 iters=50
+[kda-bench] bytes/iter = 4136.06 KB
+[kda-bench] n_blocks   = 32
+[kda-bench] iter=0 gpu_us=11.74 gbps=360.6
+[kda-bench] iter=1 gpu_us=12.54 gbps=337.6
+[kda-bench] iter=2 gpu_us=12.77 gbps=331.7
+[kda-bench] iter=49 gpu_us=12.19 gbps=347.4
+
+[kda-bench] ===== SUMMARY (kimi_linear_decode) =====
+[kda-bench] best   gpu_us=11.74 gbps=360.6
+[kda-bench] median gpu_us=12.45 gbps=340.2
+[kda-bench] mean   gpu_us=12.55 gbps=337.6
+[kda-bench] cuTile reference (W22.7 saturation @ large): 1170 GB/s best
+[kda-bench] HBM peak (RTX 5090): 1792 GB/s
+[kda-bench] shape=large B=4 H=64 d_k=256 d_v=256  warmup=2 iters=50
+[kda-bench] bytes/iter = 131712.50 KB
+[kda-bench] n_blocks   = 1024
+[kda-bench] iter=0 gpu_us=241.18 gbps=559.2
+[kda-bench] iter=1 gpu_us=245.15 gbps=550.2
+[kda-bench] iter=2 gpu_us=248.32 gbps=543.1
+[kda-bench] iter=49 gpu_us=241.54 gbps=558.4
+
+[kda-bench] ===== SUMMARY (large) =====
+[kda-bench] best   gpu_us=237.28 gbps=568.4
+[kda-bench] median gpu_us=241.95 gbps=557.4
+[kda-bench] mean   gpu_us=241.94 gbps=557.5
+[kda-bench] cuTile reference (W22.7 saturation @ large): 1170 GB/s best
+[kda-bench] HBM peak (RTX 5090): 1792 GB/s

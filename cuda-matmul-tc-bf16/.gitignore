@@ -1,0 +1,6 @@
+matmul_tc_bf16
+matmul_tc_bf16.sass
+results.csv
+run.log
+build.log
+*.o

@@ -1,0 +1,15 @@
+[package]
+name = "oxide-attn-gdn-tma"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+# Wave C2.4 (oxide-attn-gdn-tma): cuda-oxide GDN decode using TMA
+# (cp.async.bulk.tensor.2d) for the dominant S_in tile load.
+# Mirrors cuda-attn-gdn-tma's algorithmic shape but stays in Rust-CUDA.
+
+[dependencies]
+cuda-device = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-host   = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-core   = { git = "https://github.com/NVlabs/cuda-oxide.git" }

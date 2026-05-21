@@ -1,0 +1,24 @@
+=== nvidia-smi ===
+name, driver_version, compute_cap, temperature.gpu, power.draw [W]
+NVIDIA GeForce RTX 5090, 596.21, 12.0, 47, 54.27 W
+
+=== mojo --version ===
+Mojo 1.0.0b1 (a9591de6)
+
+=== Run mojo-attn-gdn (qwen3_next_decode shape, 50-iter timed bench + sampled correctness) ===
+[mojo-attn-gdn] GPU: NVIDIA GeForce RTX 5090
+[mojo-attn-gdn] shape: B= 1  H= 16  D_K= 256  D_V= 256
+[mojo-attn-gdn] tile: BLOCK_V= 64  VLANES= 16  TPB= 16
+[mojo-attn-gdn] bytes/iter= 8224.0625  KiB
+[mojo-attn-gdn] timing: min_ms= 0.026272  median_ms= 0.027744  max_ms= 0.140896
+[mojo-attn-gdn] GB/s: best= 320.5481120584653  median= 303.54094579008074
+[mojo-attn-gdn] correctness:
+[mojo-attn-gdn]   o    max_abs_err= 3.8146973e-06  (atol=1e-3)  OK
+[mojo-attn-gdn]   Sout max_abs_err= 3.7252903e-09  (atol=5e-3)  OK
+[mojo-attn-gdn] cross-frontend GDN at qwen3_next_decode shape:
+[mojo-attn-gdn]   cuda-attn-gdn-tma         = 1032 GB/s (W22.10, TMA)
+[mojo-attn-gdn]   cutile-attn-gdn           =  610 GB/s (saturation)
+[mojo-attn-gdn]   cuda-attn-gdn (W1c FFMA)  =  417 GB/s (best)
+[mojo-attn-gdn]   oxide-attn-gdn (FFMA)     =  276 GB/s
+[mojo-attn-gdn]   mojo-attn-gdn (this)      =  320.5481120584653  GB/s (best, FFMA)
+[mojo-attn-gdn] ratios: vs W1c= 0.7687005085334899  vs oxide= 1.1614062031103813  vs cutile= 0.525488708292566

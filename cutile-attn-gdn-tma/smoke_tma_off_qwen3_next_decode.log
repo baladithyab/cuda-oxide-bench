@@ -1,0 +1,11 @@
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=False  latency=10
+
+[smoke] shape=correctness B=2 H=4 d_k=64 d_v=64  allow_tma=False latency=10
+[smoke] BLOCK_V=64
+[smoke] o    max_abs=3.052e-05 rel=1.033e-04  OK
+[smoke] S_out max_abs=2.980e-08 rel=6.483e-08  OK
+

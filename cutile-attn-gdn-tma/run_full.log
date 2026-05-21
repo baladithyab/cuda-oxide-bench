@@ -1,0 +1,192 @@
+
+================================================================
+ LEG: tma_on_qwen3_next_decode  flags=[]  shape=qwen3_next_decode
+================================================================
+--- smoke ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+[smoke] shape=correctness B=2 H=4 d_k=64 d_v=64  allow_tma=True latency=10
+[smoke] BLOCK_V=64
+[smoke] o    max_abs=3.052e-05 rel=1.033e-04  OK
+[smoke] S_out max_abs=2.980e-08 rel=6.483e-08  OK
+
+
+--- bench shape=qwen3_next_decode ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+[bench] shape=qwen3_next_decode B=1 H=16 d_k=256 d_v=256  allow_tma=True latency=10
+[bench] BLOCK_V=64
+[bench] grid=(16, 4)  n_blocks=64
+[bench] flops/iter = 6.291 MFLOPS
+[bench] bytes/iter = 8224.1 KB
+[bench] iter= 0 gpu_us=33.70 gbps=249.9 tflops=0.187
+[bench] iter= 1 gpu_us=22.30 gbps=377.6 tflops=0.282
+[bench] iter= 2 gpu_us=19.78 gbps=425.8 tflops=0.318
+[bench] iter=49 gpu_us=13.82 gbps=609.2 tflops=0.455
+
+========================================================================
+ BENCH SUMMARY — qwen3_next_decode (B=1 H=16 d_k=256 d_v=256)
+   BLOCK_V=64  grid=(16, 4)
+   iters=50  warmup=2
+   median: 15.20 us   554.0 GB/s   (30.9% of 5090 HBM peak)
+   IQR   : [14.37, 30.08] us
+   best  : 13.79 us   610.6 GB/s   (34.1% of peak)   0.456 TFLOPS
+   headline: GB/s (610.6) — GDN decode is memory-bound
+========================================================================
+
+
+--- cubin export shape=qwen3_next_decode ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+Exporting cubin at shape=qwen3_next_decode for SASS inspection…
+  wrote cubin_tma_on_qwen3_next_decode.cubin  (372888 bytes)
+
+--- SASS summary (tma_on_qwen3_next_decode) ---
+  SASS lines : 11033
+  HMMA insts : 0
+  FFMA insts : 0
+  LDG insts  : 135
+  STG insts  : 129
+  UTMALDG    : 0
+  UTMASTG    : 0
+  any UTMA   : 0
+
+================================================================
+ LEG: tma_off_qwen3_next_decode  flags=[--no-tma]  shape=qwen3_next_decode
+================================================================
+--- smoke ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=False  latency=10
+
+[smoke] shape=correctness B=2 H=4 d_k=64 d_v=64  allow_tma=False latency=10
+[smoke] BLOCK_V=64
+[smoke] o    max_abs=3.052e-05 rel=1.033e-04  OK
+[smoke] S_out max_abs=2.980e-08 rel=6.483e-08  OK
+
+
+--- bench shape=qwen3_next_decode ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=False  latency=10
+
+[bench] shape=qwen3_next_decode B=1 H=16 d_k=256 d_v=256  allow_tma=False latency=10
+[bench] BLOCK_V=64
+[bench] grid=(16, 4)  n_blocks=64
+[bench] flops/iter = 6.291 MFLOPS
+[bench] bytes/iter = 8224.1 KB
+[bench] iter= 0 gpu_us=19.10 gbps=440.8 tflops=0.329
+[bench] iter= 1 gpu_us=27.62 gbps=304.9 tflops=0.228
+[bench] iter= 2 gpu_us=11.33 gbps=743.4 tflops=0.555
+[bench] iter=49 gpu_us=9.73 gbps=865.7 tflops=0.647
+
+========================================================================
+ BENCH SUMMARY — qwen3_next_decode (B=1 H=16 d_k=256 d_v=256)
+   BLOCK_V=64  grid=(16, 4)
+   iters=50  warmup=2
+   median: 10.99 us   766.1 GB/s   (42.8% of 5090 HBM peak)
+   IQR   : [10.30, 17.41] us
+   best  : 9.70 us   868.5 GB/s   (48.5% of peak)   0.649 TFLOPS
+   headline: GB/s (868.5) — GDN decode is memory-bound
+========================================================================
+
+
+--- cubin export shape=qwen3_next_decode ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=False  latency=10
+
+Exporting cubin at shape=qwen3_next_decode for SASS inspection…
+  wrote cubin_tma_off_qwen3_next_decode.cubin  (372888 bytes)
+
+--- SASS summary (tma_off_qwen3_next_decode) ---
+  SASS lines : 11033
+  HMMA insts : 0
+  FFMA insts : 0
+  LDG insts  : 135
+  STG insts  : 129
+  UTMALDG    : 0
+  UTMASTG    : 0
+  any UTMA   : 0
+
+================================================================
+ LEG: tma_on_large  flags=[]  shape=large
+================================================================
+--- smoke ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+[smoke] shape=correctness B=2 H=4 d_k=64 d_v=64  allow_tma=True latency=10
+[smoke] BLOCK_V=64
+[smoke] o    max_abs=3.052e-05 rel=1.033e-04  OK
+[smoke] S_out max_abs=2.980e-08 rel=6.483e-08  OK
+
+
+--- bench shape=large ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+[bench] shape=large B=4 H=64 d_k=256 d_v=256  allow_tma=True latency=10
+[bench] BLOCK_V=64
+[bench] grid=(256, 4)  n_blocks=1024
+[bench] flops/iter = 100.663 MFLOPS
+[bench] bytes/iter = 131585.0 KB
+[bench] iter= 0 gpu_us=124.38 gbps=1083.3 tflops=0.809
+[bench] iter= 1 gpu_us=119.81 gbps=1124.7 tflops=0.840
+[bench] iter= 2 gpu_us=117.82 gbps=1143.6 tflops=0.854
+[bench] iter=49 gpu_us=121.34 gbps=1110.4 tflops=0.830
+
+========================================================================
+ BENCH SUMMARY — large (B=4 H=64 d_k=256 d_v=256)
+   BLOCK_V=64  grid=(256, 4)
+   iters=50  warmup=2
+   median: 119.68 us   1125.9 GB/s   (62.8% of 5090 HBM peak)
+   IQR   : [117.41, 121.92] us
+   best  : 114.18 us   1180.1 GB/s   (65.9% of peak)   0.882 TFLOPS
+   headline: GB/s (1180.1) — GDN decode is memory-bound
+========================================================================
+
+
+--- cubin export shape=large ---
+cuda-tile version: 1.3.0
+cupy: 14.0.1
+device: NVIDIA GeForce RTX 5090
+compute capability: sm_120
+WAVE-C2.5 mode: allow_tma=True  latency=10
+
+Exporting cubin at shape=large for SASS inspection…
+  wrote cubin_tma_on_large.cubin  (372888 bytes)
+
+--- SASS summary (tma_on_large) ---
+  SASS lines : 11033
+  HMMA insts : 0
+  FFMA insts : 0
+  LDG insts  : 135
+  STG insts  : 129
+  UTMALDG    : 0
+  UTMASTG    : 0
+  any UTMA   : 0

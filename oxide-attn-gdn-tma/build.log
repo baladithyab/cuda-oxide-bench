@@ -1,0 +1,230 @@
+=========================================
+RUSTC-CODEGEN-CUDA BUILD: oxide-attn-gdn-tma
+=========================================
+
+Building oxide-attn-gdn-tma...
+
+    Updating git repository `https://github.com/NVlabs/cuda-oxide.git`
+    Updating crates.io index
+     Locking 49 packages to latest Rust 1.96.0-nightly compatible versions
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling glob v0.3.3
+   Compiling prettyplease v0.2.37
+   Compiling libc v0.2.186
+   Compiling cfg-if v1.0.4
+   Compiling memchr v2.8.0
+   Compiling regex-syntax v0.8.10
+   Compiling minimal-lexical v0.2.1
+   Compiling libloading v0.8.9
+   Compiling either v1.16.0
+   Compiling bindgen v0.71.1
+   Compiling shlex v1.3.0
+   Compiling nom v7.1.3
+   Compiling itertools v0.13.0
+   Compiling crc32fast v1.5.0
+   Compiling clang-sys v1.8.1
+   Compiling rustc-hash v2.1.2
+   Compiling bitflags v2.11.1
+   Compiling syn v2.0.117
+   Compiling regex-automata v0.4.14
+   Compiling log v0.4.29
+   Compiling object v0.36.7
+   Compiling thiserror v2.0.18
+   Compiling cexpr v0.6.0
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling zerocopy v0.8.48
+   Compiling indexmap v2.14.0
+   Compiling hashbrown v0.15.5
+   Compiling regex v1.12.3
+   Compiling anyhow v1.0.102
+   Compiling reserved-oxide-symbols v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling oxide-artifacts v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling zerocopy-derive v0.8.48
+   Compiling thiserror-impl v2.0.18
+   Compiling cuda-macros v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling cuda-bindings v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling cuda-device v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling nvjitlink-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling libnvvm-sys v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling half v2.7.1
+   Compiling cuda-core v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling cuda-host v0.1.0 (https://github.com/NVlabs/cuda-oxide.git#c8b3103c)
+   Compiling oxide-attn-gdn-tma v0.1.0 (/home/codeseys/cuda-exploration/oxide-attn-gdn-tma)
+warning: unnecessary `unsafe` block
+   --> src/main.rs:219:18
+    |
+219 |         let so = unsafe { core::intrinsics::fmuladdf32(bk, r_j, s_scaled[jj2]) };
+    |                  ^^^^^^ unnecessary `unsafe` block
+    |
+    = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+   --> src/main.rs:392:18
+    |
+392 |         let so = unsafe { core::intrinsics::fmuladdf32(bk, r_j, s_scaled[jj2]) };
+    |                  ^^^^^^ unnecessary `unsafe` block
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:308:13
+    |
+308 |             AB[0] = alpha[bh];
+    |             ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:313:13
+    |
+313 |             AB[1] = beta[bh];
+    |             ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::K_SH` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:320:9
+    |
+320 |         K_SH[tid] = k_t;
+    |         ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::Q_SH` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:321:9
+    |
+321 |         Q_SH[tid] = q_t;
+    |         ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::TILE_S` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:328:17
+    |
+328 |                 &raw mut TILE_S as *mut u8,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:348:28
+    |
+348 |     let alpha_v = unsafe { AB[0] };
+    |                            ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::TILE_S` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:354:26
+    |
+354 |         let s = unsafe { TILE_S[tid * BV + j] };
+    |                          ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::PROD` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:362:13
+    |
+362 |             PROD[tid] = k_t * s_scaled[jj];
+    |             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::UVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:377:17
+    |
+377 |                 UVEC[jj] = PROD[0];
+    |                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::UVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:390:28
+    |
+390 |         let u_j = unsafe { UVEC[jj2] };
+    |                            ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::PROD` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:400:13
+    |
+400 |             PROD[tid] = q_t * s_out_row[jj3];
+    |             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::OVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:415:17
+    |
+415 |                 OVEC[jj3] = PROD[0];
+    |                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk256_tma::OVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:434:52
+    |
+434 |             *o_ptr.add(bh * 256 + bv_col0 + tid) = OVEC[tid];
+    |                                                    ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:117:13
+    |
+117 |             AB[0] = alpha[bh];
+    |             ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:122:13
+    |
+122 |             AB[1] = beta[bh];
+    |             ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::K_SH` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:130:9
+    |
+130 |         K_SH[tid] = k_t;
+    |         ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::Q_SH` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:131:9
+    |
+131 |         Q_SH[tid] = q_t;
+    |         ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::TILE_S` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:148:17
+    |
+148 |                 &raw mut TILE_S as *mut u8,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::AB` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:171:28
+    |
+171 |     let alpha_v = unsafe { AB[0] };
+    |                            ^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::TILE_S` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:179:26
+    |
+179 |         let s = unsafe { TILE_S[tid * BV + j] };
+    |                          ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::PROD` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:188:13
+    |
+188 |             PROD[tid] = k_t * s_scaled[jj];
+    |             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::UVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:203:17
+    |
+203 |                 UVEC[jj] = PROD[0];
+    |                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::UVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:217:28
+    |
+217 |         let u_j = unsafe { UVEC[jj2] };
+    |                            ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::PROD` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:228:13
+    |
+228 |             PROD[tid] = q_t * s_out_row[jj3];
+    |             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::OVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:243:17
+    |
+243 |                 OVEC[jj3] = PROD[0];
+    |                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_gdn_decode_dk64_tma::OVEC` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:263:51
+    |
+263 |             *o_ptr.add(bh * 64 + bv_col0 + tid) = OVEC[tid];
+    |                                                   ^^^^
+
+warning: `oxide-attn-gdn-tma` (bin "oxide-attn-gdn-tma") generated 28 warnings
+    Finished `release` profile [optimized] target(s) in 19.46s
+
+✓ Build succeeded

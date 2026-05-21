@@ -78,3 +78,9 @@ wgpu-attn-mla/target/
 mojo-matmul-tiled/__pycache__/
 mojo-attn-gqa/__pycache__/
 mojo-attn-gqa/attn_gqa
+
+# Wave C2 binaries
+cuda-matmul-tc-bf16/matmul_tc_bf16
+cuda-attn-kda/attn_kda
+cuda-attn-kda/bench
+oxide-attn-gdn-tma/target/

@@ -1,0 +1,2 @@
+/usr/local/cuda/bin/nvcc -O3 -arch=sm_120 -ccbin clang-14 -std=c++17 -lineinfo -lstdc++ -lm -o attn_kda attn_kda.cu
+/usr/local/cuda/bin/nvcc -O3 -arch=sm_120 -ccbin clang-14 -std=c++17 -lineinfo -lstdc++ -lm -o bench bench.cu
