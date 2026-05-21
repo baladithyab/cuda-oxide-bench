@@ -111,6 +111,11 @@ Vision: ship a comprehensive, third-party-citeable evaluation of NVlabs/cuda-oxi
 - [ ] **W15.4: revisit when cuda-oxide ships `cuda_device::mma`** — track NVlabs/cuda-oxide releases
 - [ ] **G4-G7**: 3DGS deepening (SH3, tile-binning, larger scenes, backward pass)
 
+### Wave 17+ in flight
+
+- 🚧 **Wave 17 (research grounded, ADRs landed)**: KDA + oxide-MLA + GDN-other-frontends. See `docs/plans/wave-17.md`.
+- 📋 **Wave 18 (research grounded, plan ready, pending sign-off)**: Mojo as a fifth frontend column. See `docs/plans/wave-18.md` and `docs/research/wave18-mojo-frontend.md`. Phased serial-then-parallel rollout (Phase A toolchain smoke test → Phase B memory-bound → Phase C compute-bound → Phase D conditional attention). Critical sm_120 question: does Mojo emit `mma.sync` for tensor cores, or is it gated to sm_100a-only tcgen05 like the MAX flagship matmul (issue #5707, PR #6059)?
+
 ## Wave plan (legacy, original Wave 1-3 outline)
 
 - **Wave 1 (parallel, 2 subagents):** M1 + M2 — methodology fixes. Independent file ownership. Runs first because all later results depend on the new timing baseline.
