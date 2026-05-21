@@ -63,3 +63,9 @@ __pycache__/
 # Logs we want to keep are committed explicitly; ignore stray runs
 *.tmp
 /cuda-reduction/reduce
+
+# W23 binaries (Wave B continuation)
+cuda-attn-mla-tma/attn_mla_tma
+mojo-3dgs/cam_A.bin
+mojo-3dgs/*.ppm
+mojo-3dgs/*.sass

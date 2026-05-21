@@ -1,0 +1,7 @@
+[mla-tma] device: NVIDIA GeForce RTX 5090 (sm_120)
+[mla-tma] inputs dir: /home/codeseys/cuda-exploration/analysis/wave15-attention-architecture/inputs
+[mla-tma] === correctness run (B=1 n_h=4 S=128 qk=96 d_v=64) ===
+[mla-tma] correctness_mla qk=96 (qk_eff=96, native) -> max_abs_err=1.597e-04 max_rel=7.271e+00 expected_max_abs=3.039e-01
+[mla-tma] correctness_mla qk=96 (qk_eff=128, padded) -> max_abs_err=1.597e-04 max_rel=7.271e+00 expected_max_abs=3.039e-01
+[mla-tma] correctness: native=1.597e-04 (OK)  padded=1.597e-04 (OK)  TOL=1e-02
+[mla-tma] author + correctness only (W23.2). No timed bench.

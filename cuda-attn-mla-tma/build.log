@@ -1,0 +1,7 @@
+/usr/local/cuda/bin/nvcc -ccbin clang-14 -O3 -arch=sm_120 -std=c++17 -lineinfo -lstdc++ -lm -o attn_mla_tma attn_mla_tma.cu -lcuda
+attn_mla_tma.cu(274): warning #177-D: variable "_unused_" was declared but never referenced
+      constexpr uint32_t _unused_ = 0;
+                         ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+

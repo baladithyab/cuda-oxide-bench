@@ -1,0 +1,45 @@
+=== nvidia-smi ===
+name, driver_version, compute_cap, memory.total [MiB]
+NVIDIA GeForce RTX 5090, 596.21, 12.0, 32607 MiB
+
+=== mojo --version ===
+Mojo 1.0.0b1 (a9591de6)
+
+=== prep.py: PLY -> binary blob (cam A) ===
+Loading /home/codeseys/cuda-exploration/oxide-3dgs-real/scenes/utsuho_plush.ply
+PLY header: 53671 vertices, 62 float props
+SH support: degree 3 (16 coefs/channel)
+Parsed 53671 gaussians; degree 3 (16 coefs/channel)
+Projected 53671 gaussians for cam A
+Wrote cam_A.bin (1932160 bytes)
+
+=== rasterize.mojo: GPU rasterize cam A ===
+/home/codeseys/cuda-exploration/mojo-3dgs/rasterize.mojo:113:1: warning: 'fn' is deprecated, use 'def' instead
+fn read_u32_le(bytes: List[UInt8], off: Int) -> UInt32:
+^~
+def
+/home/codeseys/cuda-exploration/mojo-3dgs/rasterize.mojo:120:1: warning: 'fn' is deprecated, use 'def' instead
+fn read_f32_le(bytes: List[UInt8], off: Int) -> Float32:
+^~
+def
+/home/codeseys/cuda-exploration/mojo-3dgs/rasterize.mojo:128:1: warning: 'fn' is deprecated, use 'def' instead
+fn quantize_u8(v: Float32) -> UInt8:
+^~
+def
+=== mojo-3dgs (Wave 23.1) ===
+image:  800 x 800   BS= 16
+Loading blob: cam_A.bin
+n_proj = 53671
+GPU: NVIDIA GeForce RTX 5090
+kernel time (cam A, 1 iter): 38.501407 ms
+nonzero pixels (>0.01): 42062 / 640000
+wrote output_utsuho_plush_A.ppm bytes= 1920015
+
+=== diff vs cuda-3dgs-real cam A ===
+  pixels         : 640000
+  pixels w/ diff : 99 (0.0155%)
+  pixels w/ diff>2: 0 (0.0000%)
+  pixels w/ diff>5: 0 (0.0000%)
+  max u8 diff    : 1
+  mean u8 diff   : 0.0001
+  RESULT: PASS (max diff <= 2)

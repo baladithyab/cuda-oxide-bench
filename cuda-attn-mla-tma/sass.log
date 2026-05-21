@@ -1,0 +1,12 @@
+/usr/local/cuda/bin/cuobjdump --dump-sass attn_mla_tma > attn_mla_tma.sass
+----- SASS instruction mix (W23.2 cuda-attn-mla-tma) -----
+HMMA       : 20  (target: > 0)
+FFMA       : 104
+LDG.E      : 49  (W17 W1a baseline: 129; expect << that)
+LDG.E.128  : 0
+LDG.E.64   : 0
+STG.E.128  : 0
+LDS.128    : 0
+MUFU       : 25
+UTMALDG    : 4  (target signal: W17 W1a had 0; expect > 0)
+UTMASTG    : 0
