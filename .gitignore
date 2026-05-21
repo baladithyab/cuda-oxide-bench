@@ -13,6 +13,18 @@ cuda-matmul/matmul
 cuda-matmul-tiled/matmul
 cublas-matmul/matmul
 cuda-vecadd-bench/vecadd
+cuda-attn-gqa/attn_gqa
+cublas-attn-gqa/attn_gqa
+cuda-attn-mla/attn_mla
+cuda-attn-gdn/attn_gdn
+cuda-attn-gdn/bench
+cublas-attn-mla/attn_mla
+cublas-attn-mla/bench
+
+# Compiled object files (rebuild from source)
+*.o
+*.so
+*.obj
 
 # Editor / OS
 .DS_Store
