@@ -84,3 +84,11 @@ cuda-matmul-tc-bf16/matmul_tc_bf16
 cuda-attn-kda/attn_kda
 cuda-attn-kda/bench
 oxide-attn-gdn-tma/target/
+
+# Wave C3 binaries
+oxide-attn-mla-tma/target/
+oxide-attn-gdn-tma/oxide_attn_gdn_tma.cubin
+oxide-attn-gdn-tma/oxide_attn_gdn_tma.ll
+oxide-attn-mla-tma/oxide_attn_mla_tma.cubin
+oxide-attn-mla-tma/oxide_attn_mla_tma.ll
+oxide-attn-mla-tma/oxide_attn_mla_tma.ltoir

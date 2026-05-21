@@ -1,0 +1,14 @@
+[mojo-attn-gdn-async] GPU: NVIDIA GeForce RTX 5090
+[mojo-attn-gdn-async] shape: B= 1  H= 16  D_K= 256  D_V= 256
+[mojo-attn-gdn-async] tile: BLOCK_V= 64  VLANES= 16  TPB= 16
+[mojo-attn-gdn-async] bytes/iter= 8224.0625  KiB
+[mojo-attn-gdn-async] timing: min_ms= 0.013791  median_ms= 0.014368  max_ms= 0.029247
+[mojo-attn-gdn-async] GB/s: best= 610.6475237473716  median= 586.1247216035634
+[mojo-attn-gdn-async] correctness:
+[mojo-attn-gdn-async]   o    max_abs_err= 3.8146973e-06  (atol=1e-3)  OK
+[mojo-attn-gdn-async]   Sout max_abs_err= 3.7252903e-09  (atol=5e-3)  OK
+[mojo-attn-gdn-async] cross-cell GDN comparison:
+[mojo-attn-gdn-async]   mojo-attn-gdn (sync FFMA, C2.3)  =  320.5 GB/s
+[mojo-attn-gdn-async]   cuda-attn-gdn-async (W22.9)      =  311.8 GB/s (regression -25% vs W1c)
+[mojo-attn-gdn-async]   mojo-attn-gdn-async (this)       =  610.6475237473716  GB/s (best)
+[mojo-attn-gdn-async] ratios: vs mojo-sync= 1.9052964859512374  vs cuda-async= 1.95845902420581

@@ -1,0 +1,17 @@
+[package]
+name = "oxide-attn-mla-tma"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+# Wave C3.3 (oxide-attn-mla-tma): cuda-oxide MLA with TMA-loaded Q/K/V tiles.
+# Mirrors the C2.4 GDN-TMA recipe (cuTensorMapEncodeTiled host-side; intrinsic
+# cp_async_bulk_tensor_2d_g2s + Barrier device-side) into the 3-kernel MLA
+# decomposition. Same FFMA microtile inner loop as oxide-attn-mla — only the
+# Q/K (qkt) and V (pv) gmem tile loads are replaced with TMA.
+
+[dependencies]
+cuda-device = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-host   = { git = "https://github.com/NVlabs/cuda-oxide.git" }
+cuda-core   = { git = "https://github.com/NVlabs/cuda-oxide.git" }

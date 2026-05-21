@@ -1,0 +1,2 @@
+impl,kernel,batch,n_heads,d_k,d_v,block_v,gpu_ms_best,gpu_ms_median,gpu_ms_max,gbps_best,gbps_median,bytes_per_iter_kib
+mojo-attn-gdn-async,gdn_decode_async,1,16,256,256,64,0.013791,0.014368,0.029247,610.648,586.125,8224.06

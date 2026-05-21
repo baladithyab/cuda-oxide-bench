@@ -1,0 +1,5 @@
+impl,shape,kind,metric,value
+oxide-attn-mla-tma,correctness_mla,correctness,max_abs,1.192093e-7
+oxide-attn-mla-tma,correctness_mla,correctness,max_rel,9.017465e-4
+oxide-attn-mla-tma,correctness_mla,correctness,result,PASS
+oxide-attn-mla-tma,correctness_mla,timing,gpu_ms_1iter,0.094144

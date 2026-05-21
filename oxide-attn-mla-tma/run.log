@@ -1,0 +1,131 @@
+=========================================
+RUSTC-CODEGEN-CUDA: oxide-attn-mla-tma
+=========================================
+
+This is the proper cargo workflow:
+  RUSTFLAGS="-Z codegen-backend=..." cargo run
+
+Building and running oxide-attn-mla-tma...
+
+   Compiling oxide-attn-mla-tma v0.1.0 (/home/codeseys/cuda-exploration/oxide-attn-mla-tma)
+warning: unused import: `CudaEvent`
+  --> src/main.rs:43:18
+   |
+43 |     CudaContext, CudaEvent, DeviceBuffer, LaunchConfig, sys,
+   |                  ^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+   --> src/main.rs:296:17
+    |
+296 |         let e = unsafe { core::intrinsics::expf32(v - row_max) };
+    |                 ^^^^^^ unnecessary `unsafe` block
+    |
+    = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::WMAX` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:277:29
+    |
+277 |     if lane == 0 { unsafe { WMAX[warp_id] = m; } }
+    |                             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::WMAX` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:280:49
+    |
+280 |         let mut v: f32 = if lane < 4 { unsafe { WMAX[lane] } } else { f32::NEG_INFINITY };
+    |                                                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::ROW_MAX` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:287:33
+    |
+287 |         if lane == 0 { unsafe { ROW_MAX[0] = v; } }
+    |                                 ^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::ROW_MAX` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:290:28
+    |
+290 |     let row_max = unsafe { ROW_MAX[0] };
+    |                            ^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::WSUM` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:306:29
+    |
+306 |     if lane == 0 { unsafe { WSUM[warp_id] = s; } }
+    |                             ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::WSUM` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:309:49
+    |
+309 |         let mut v: f32 = if lane < 4 { unsafe { WSUM[lane] } } else { 0.0 };
+    |                                                 ^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::ROW_SUM` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:312:33
+    |
+312 |         if lane == 0 { unsafe { ROW_SUM[0] = v; } }
+    |                                 ^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_softmax_kernel::ROW_SUM` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:315:28
+    |
+315 |     let row_sum = unsafe { ROW_SUM[0] };
+    |                            ^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_qkt_kernel::TILE_Q` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:148:21
+    |
+148 |                     &raw mut TILE_Q as *mut u8,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_qkt_kernel::TILE_K` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:155:21
+    |
+155 |                     &raw mut TILE_K as *mut u8,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_qkt_kernel::TILE_Q` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:187:22
+    |
+187 |                 a0 = TILE_Q[(ty4 + 0) * 16 + kk];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_qkt_kernel::TILE_K` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:191:22
+    |
+191 |                 b0 = TILE_K[(tx4 + 0) * 16 + kk];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_pv_kernel::TILE_P` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:402:17
+    |
+402 |                 TILE_P[idx] = vv;
+    |                 ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_pv_kernel::TILE_V` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:414:21
+    |
+414 |                     &raw mut TILE_V as *mut u8,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_pv_kernel::TILE_P` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:441:22
+    |
+441 |                 a0 = TILE_P[(ty4 + 0) * 16 + kk];
+    |                      ^^^^^^
+
+warning: `static mut cuda_oxide_kernel_246e25db_mla_pv_kernel::TILE_V` uses `SharedArray`, which cuda-oxide lowers to per-block CUDA shared memory, not persistent device global memory
+   --> src/main.rs:445:22
+    |
+445 |                 b0 = TILE_V[kk * 64 + tx4 + 0];
+    |                      ^^^^^^
+
+warning: `oxide-attn-mla-tma` (bin "oxide-attn-mla-tma") generated 18 warnings (run `cargo fix --bin "oxide-attn-mla-tma" -p oxide-attn-mla-tma` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.60s
+     Running `target/release/oxide-attn-mla-tma`
+[oxide-attn-mla-tma] Wave C3.3 — cuda-oxide MLA with TMA Q/K/V tiles
+[oxide-attn-mla-tma] GPU: RTX 5090 sm_120
+[oxide-attn-mla-tma] shape=correctness_mla (B=1 S=128 n_h=4 qk=96 d_v=64) scores_MB=0.3
+[oxide-attn-mla-tma] correctness_mla correctness: max_abs=1.192e-7 max_rel=9.017e-4 (atol=0.01) -> PASS
+[oxide-attn-mla-tma] correctness_mla timing: gpu_ms=0.0941 cpu_ms=0.1352 (1 iter, not a bench)
+[oxide-attn-mla-tma] results.csv written
