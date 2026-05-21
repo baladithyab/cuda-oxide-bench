@@ -1,24 +1,30 @@
-# Wave 22 (partial) — Mojo bf16/f16 follow-on + Wave 17 W1c hardware investigation
+# Wave 22 — Mojo bf16/f16 follow-on + cuda-attn-gdn investigation chain
 
-**Status:** ✅ Wave 22.2, 22.3, 22.6, 22.8 SHIPPED 2026-05-21. W22.1, W22.4, W22.5, W22.7 deferred to next loop.
+**Status:** ✅ Wave 22.2, 22.3, 22.5, 22.6, 22.7, 22.8, 22.9, 22.11 SHIPPED 2026-05-21. W22.1, W22.4, W22.10, W22.12 deferred to next loop.
 **Predecessor:** Wave 21 (mojo-matmul-bf16 at 79.3 TF). See [results/wave21-summary.md](wave21-summary.md).
+**Final loop summary:** [results/2026-05-21-deep-work-loop-final-summary.md](2026-05-21-deep-work-loop-final-summary.md) — 14 cells, 2 hypothesis falsifications, Phase-7 review caught 1 HIGH issue.
 **Cross-cell finding:** Wave 17 W1c hypothesis "cuTile UTMALDG > nvcc LDG.E.128" was **WRONG** — both have ZERO TMA. cuTile's win is producer/consumer warp-specialization with Blackwell async-transaction barriers. See [docs/research/wave17-w1c-tma-vs-ldg128-investigation.md](../docs/research/wave17-w1c-tma-vs-ldg128-investigation.md).
+
+## Reporting convention (Phase-7 follow-up)
+
+- **All single-row perf claims report `(best, median)` paired** for cells where IQR is non-trivial. cuTile/Mojo at saturation N=4096 are tight (CV<2%) so a single best-or-median is fine; GDN/KDA at small shapes have IQR > 50% of median, MUST report both.
+- **Tolerance reporting:** all cells use `atol=1e-2 + rtol=1e-3·|ref|` (Wave 21 spec). The W22.2 f16 cell originally used `atol=1.0 + rtol=1e-2·|ref|`; tightened in this loop's MED-f16-tol follow-up. Observed err 3.2e-3 still PASSES the tighter bound.
 
 ## Headline matrix — Mojo dtype lanes at M=N=K=4096
 
-| variant | min_ms | median_ms | max_ms | TFLOPS_median | TFLOPS_best | max_abs_err |
-|---|---:|---:|---:|---:|---:|---:|
-| **bf16 (Wave 21)** | 1.722 | 1.734 | 2.124 | **79.26** | 79.82 | 2.2e-3 |
-| **f16 (Wave 22.2)** | 1.724 | 1.730 | 2.266 | **79.44** | 79.71 | 3.2e-3 |
-| bf16-padded (W22.3, est.) | — | — | — | not measured (same SASS instruction mix as baseline) | — | 2.4e-7 (M=64) |
+| variant | min_ms | median_ms | max_ms | TFLOPS_best | TFLOPS_median | max_abs_err | tolerance |
+|---|---:|---:|---:|---:|---:|---:|---|
+| **bf16 (Wave 21)** | 1.722 | 1.734 | 2.124 | 79.82 | **79.26** | 2.2e-3 | atol=1e-2+rtol=1e-3 |
+| **f16 (Wave 22.2)** | 1.725 | 1.735 | 2.150 | 79.68 | **79.22** | 3.2e-3 | atol=1e-2+rtol=1e-3 ✓ |
+| bf16-padded (W22.3) | — | — | — | not measured | not measured | 2.4e-7 (M=64) | same as W21 |
 
-**bf16 ≈ f16 within ±0.5%** — confirms Mojo's m16n8k16 path is dtype-agnostic on consumer Blackwell. The TC engagement (`HMMA.16816.F32` SASS) is identical between bf16 and f16; what differs is only the input-dtype suffix.
+**bf16 ≈ f16 within ±0.05%** — confirms Mojo's m16n8k16 path is dtype-agnostic on consumer Blackwell. The TC engagement (`HMMA.16816.F32` SASS) is identical between bf16 and f16; what differs is only the input-dtype suffix.
 
 ## Wave 22.2 — mojo-matmul-f16 (f16 lane)
 
 - Cell: `/home/codeseys/cuda-exploration/mojo-matmul-f16/`
 - Cloned from Wave 21 bf16 with three substantive diffs (DType.bfloat16 → DType.float16; SIMD widths unchanged at (8, 4, 4, 4); SASS expectation `HMMA.16816.F32` not `.F32.F16`).
-- 79.44 TF median @ 4096³, max_abs_err = 3.19e-3 vs 1024-sample CPU reference, tolerance atol=1.0 + rtol=1e-2·|ref| (looser than bf16's atol=1e-2 + rtol=1e-3 since f16's 5-bit exp has narrower range).
+- 79.22 TF median (79.68 TF best) @ 4096³, max_abs_err = 3.19e-3 vs 1024-sample CPU reference, tolerance atol=1e-2 + rtol=1e-3·|ref| (Phase-7 tightened from original `atol=1.0+rtol=1e-2`; observed err PASSES bf16-spec tolerance).
 - HMMA count = 32 in SASS (vs bf16's 16 — interesting, may indicate the Mojo dispatcher emits twice as many MMA calls for f16; orchestrator did not investigate further).
 - **No new pitfalls** — the bf16 → f16 swap is mechanical via the dtype enum + the dispatcher tuple match in `std.gpu.compute.arch.mma_nvidia`.
 
@@ -71,20 +77,22 @@
 | oxide | unchecked fmuladd | 7.0 | f32 | ❌ |
 | nvcc | naive f32 | 6.4 | f32 | ❌ |
 
-## Wave 22 status table
+## Wave 22 status table (updated 2026-05-21 end-of-loop)
 
 | ID | Description | Status | Result |
 |---|---|---|---|
-| W22.1 | TMA loads via cp_async_bulk | DEFERRED | next loop |
-| W22.2 | f16 lane | ✅ SHIPPED | 79.44 TF |
-| W22.3 | Padded smem variant | ✅ SHIPPED (correctness) | no perf delta predicted |
+| W22.1 | TMA loads via cp_async_bulk | DEFERRED | next loop, XL/risky |
+| W22.2 | f16 lane | ✅ SHIPPED | **79.22 TF median, 79.68 best** |
+| W22.3 | Padded smem variant | ✅ SHIPPED (correctness) | refutes ldmatrix.x4 hypothesis |
 | W22.4 | FP8 lane | DEFERRED | XL, full hand-roll |
-| W22.5 | mojo-attn-bf16 attention | DEFERRED | next loop |
-| W22.6 | oxide-attn-gdn bench harness | ✅ SHIPPED (author) | bench numbers TBD |
-| W22.7 | cutile-attn-kda larger-shape sweep | DEFERRED | next loop |
+| W22.5 | mojo-attn-bf16 attention | ✅ SHIPPED (correctness) | **0.0 BIT-EXACT** vs CPU SDPA |
+| W22.6 | oxide-attn-gdn bench harness | ✅ SHIPPED (full) | **best 276.1 GB/s, median 264.8** |
+| W22.7 | cutile-attn-kda larger-shape sweep | ✅ SHIPPED | **best 1170 GB/s, median 1144 (saturation)**; 611 best @ qwen3-parity |
 | W22.8 | TMA-vs-LDG.E.128 investigation | ✅ SHIPPED | hypothesis REJECTED |
-| W22.9 | cuda-attn-gdn-async (cuda::pipeline) | NEW (W22.8 follow-up) | added to BACKLOG |
-| W22.10 | cuda-attn-gdn-tma (cuTensorMapEncodeTiled) | NEW (W22.8 follow-up) | added to BACKLOG |
+| W22.9 | cuda-attn-gdn-async (cuda::pipeline) | ✅ SHIPPED | **best 311.8 GB/s — REGRESSION (-25%)** |
+| W22.10 | cuda-attn-gdn-tma (cuTensorMapEncodeTiled) | DEFERRED | reframed by W22.11; next loop |
+| W22.11 | cuda-attn-gdn-async-tpb128 (4-warp split) | ✅ SHIPPED | **best 245.3 GB/s — DEEPER REGRESSION (-41%)** |
+| W22.12 | profile cuTile launch geometry | DEFERRED | NEW; best lead post-W22.11 |
 
 ## Cross-loop pitfalls (orchestrator-level lessons)
 

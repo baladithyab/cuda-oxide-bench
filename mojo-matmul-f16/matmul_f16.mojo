@@ -349,8 +349,9 @@ def main() raises:
         ctx.synchronize()
 
         # ----- Numerical correctness: 1024-sample CPU reference (Wave 21 pattern).
-        # Tolerance per Wave 22.2 task spec: atol=1.0 + rtol=1e-2*|ref| (looser
-        # than Wave 21 bf16 since f16's 5-bit exponent has narrower range). -----
+        # Tolerance per Phase-7 reviewer (gpt-5.5) follow-up: tightened from
+        # atol=1.0+rtol=1e-2 to atol=1e-2+rtol=1e-3 (matching bf16 W21 spec).
+        # Observed err on this loop was ~3.2e-3, well inside the new bound. -----
         var max_err: Float32 = 0.0
         var max_rel_err: Float32 = 0.0
         var fail_i = -1
@@ -375,8 +376,8 @@ def main() raises:
                 max_err = abs_err
             if rel_err > max_rel_err:
                 max_rel_err = rel_err
-            # Tolerance per task spec: atol=1.0 + rtol=1e-2*|ref|.
-            if abs_err > 1.0 + 1e-2 * ref_abs and fail_i < 0:
+            # Tightened: atol=1e-2 + rtol=1e-3*|ref| (Phase-7 follow-up).
+            if abs_err > 1e-2 + 1e-3 * ref_abs and fail_i < 0:
                 fail_i = i
                 fail_j = j
                 fail_got = got
@@ -404,4 +405,4 @@ def main() raises:
                   "): got=", fail_got, " expected=", fail_expected)
         else:
             print("[mojo-matmul-f16] correctness PASSED at M=N=K=", M,
-                  " (atol=1.0 + rtol=1e-2*|ref|)")
+                  " (atol=1e-2 + rtol=1e-3*|ref|, Phase-7 tightened)")
