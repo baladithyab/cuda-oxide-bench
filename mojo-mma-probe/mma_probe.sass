@@ -1,0 +1,82 @@
+GPU:  NVIDIA GeForce RTX 5090
+	.target	sm_120a
+
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text.mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a --------------------------
+	.section	.text.mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a,"ax",@progbits
+	.align	128
+        .global         mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a
+        .type           mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a,@function
+        .size           mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a,(.L_x_1 - mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a)
+        .other          mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a,@"STO_CUDA_ENTRY STV_DEFAULT"
+mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a:
+.text.mma_probe_mma_probe_kernel_Un6A6AoA6A6A_4941b59c595a8a0a:
+        /*0000*/                   LDC R1, c[0x0][0x37c] ;
+        /*0010*/                   S2R R14, SR_TID.X ;
+        /*0020*/                   LDCU.64 UR4, c[0x0][0x358] ;
+        /*0030*/                   I2FP.F32.U32 R0, R14 ;
+        /*0040*/                   FMUL R3, R0.reuse, 0.013000000268220901489 ;
+        /*0050*/                   FMUL R4, R0.reuse, 0.014000000432133674622 ;
+        /*0060*/                   FMUL R6, R0.reuse, 0.0049999998882412910461 ;
+        /*0070*/                   FMUL R7, R0.reuse, 0.0060000000521540641785 ;
+        /*0080*/                   FMUL R10, R0.reuse, 0.010999999940395355225 ;
+        /*0090*/                   FMUL R11, R0, 0.012000000104308128357 ;
+        /*00a0*/                   F2FP.BF16.F32.PACK_AB R13, R4, R3 ;
+        /*00b0*/                   FMUL R8, R0.reuse, 0.0070000002160668373108 ;
+        /*00c0*/                   FMUL R9, R0.reuse, 0.0080000003799796104431 ;
+        /*00d0*/                   FMUL R5, R0.reuse, 0.0030000000260770320892 ;
+        /*00e0*/                   FMUL R2, R0.reuse, 0.0040000001899898052216 ;
+        /*00f0*/                   FMUL R4, R0.reuse, 0.0010000000474974513054 ;
+        /*0100*/                   FMUL R3, R0, 0.0020000000949949026108 ;
+        /*0110*/                   F2FP.BF16.F32.PACK_AB R6, R7, R6 ;
+        /*0120*/                   F2FP.BF16.F32.PACK_AB R12, R11, R10 ;
+        /*0130*/                   FMUL R10, R0.reuse, 0.00030000001424923539162 ;
+        /*0140*/                   F2FP.BF16.F32.PACK_AB R7, R9, R8 ;
+        /*0150*/                   FMUL R8, R0, 9.9999997473787516356e-05 ;
+        /*0160*/                   F2FP.BF16.F32.PACK_AB R5, R2, R5 ;
+        /*0170*/                   FMUL R9, R0.reuse, 0.00019999999494757503271 ;
+        /*0180*/                   F2FP.BF16.F32.PACK_AB R4, R3, R4 ;
+        /*0190*/                   FMUL R11, R0, 0.00039999998989515006542 ;
+        /*01a0*/                   LDC.64 R2, c[0x0][0x380] ;
+        /*01b0*/                   HMMA.16816.F32.BF16 R4, R4, R12, R8 ;
+        /*01c0*/                   SHF.L.U32 R9, R14, 0x2, RZ ;
+        /*01d0*/                   IMAD.WIDE.U32 R2, R9, 0x4, R2 ;
+        /*01e0*/                   @!UPT UIADD3 URZ, UPT, UPT, URZ, URZ, URZ ;
+        /*01f0*/                   STG.E desc[UR4][R2.64], R4 ;
+        /*0200*/                   STG.E desc[UR4][R2.64+0x4], R5 ;
+        /*0210*/                   STG.E desc[UR4][R2.64+0x8], R6 ;
+        /*0220*/                   STG.E desc[UR4][R2.64+0xc], R7 ;
+        /*0230*/                   EXIT ;
+.L_x_0:
+        /*0240*/                   BRA `(.L_x_0);
+        /*0250*/                   NOP;
+        /*0260*/                   NOP;
+        /*0270*/                   NOP;
+        /*0280*/                   NOP;
+        /*0290*/                   NOP;
+        /*02a0*/                   NOP;
+        /*02b0*/                   NOP;
+        /*02c0*/                   NOP;
+        /*02d0*/                   NOP;
+        /*02e0*/                   NOP;
+        /*02f0*/                   NOP;
+.L_x_1:
+
+
+//--------------------- SYMBOLS --------------------------
+
+	.type		.nv.reservedSmem.offset0,@object
+	.size		.nv.reservedSmem.offset0,0x4
+[mma-probe] First 8 of 128 output floats:
+  out[ 0 ] =  0.002575419
+  out[ 1 ] =  0.0069918986
+  out[ 2 ] =  0.003975734
+  out[ 3 ] =  0.010791574
+  out[ 4 ] =  0.011503788
+  out[ 5 ] =  0.016027208
+  out[ 6 ] =  0.017900767
+  out[ 7 ] =  0.024825804
+[mma-probe] If you see HMMA.16816.F32 in stderr SASS dump,
+           the bf16 MMA path engaged on sm_120. Done.
