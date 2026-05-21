@@ -1,0 +1,39 @@
+=== nvidia-smi ===
+name, driver_version, compute_cap, memory.total [MiB]
+NVIDIA GeForce RTX 5090, 596.21, 12.0, 32607 MiB
+
+=== mojo --version ===
+Mojo 1.0.0b1 (a9591de6)
+
+=== pixi info ===
+System
+------------
+       Pixi version: 0.68.1
+        TLS backend: rustls
+           Platform: linux-64
+   Virtual packages: __unix=0=0
+                   : __linux=6.6.114.1=0
+                   : __glibc=2.39=0
+                   : __cuda=13.2=0
+                   : __archspec=1=x86_64_v4
+          Cache dir: /home/codeseys/.cache/rattler/cache
+       Auth storage: /home/codeseys/.rattler/credentials.json
+   Config locations: No config files found
+
+Global
+------------
+            Bin dir: /home/codeseys/.pixi/bin
+    Environment dir: /home/codeseys/.pixi/envs
+       Manifest dir: /home/codeseys/.pixi/manifests/pixi-global.toml
+
+
+=== Run vecadd ===
+GPU detected:  NVIDIA GeForce RTX 5090
+N = 1024
+max_abs_err = 0.0
+first nonzero err idx = -1
+out[0]   = 0.0   (expected 0.0)
+out[1]   = 1.5   (expected 1.5)
+out[100] = 150.0   (expected 150.0)
+out[N-1] = 1534.5   (expected 1534.5 )
+PASS: vecadd numerically exact

@@ -1,0 +1,8 @@
+# Wave 18: Mojo workspace
+# pixi env (~890 MB; environment-managed, never check in)
+.pixi/
+
+# Build/JIT artifacts
+*.bin
+*.cubin
+__pycache__/

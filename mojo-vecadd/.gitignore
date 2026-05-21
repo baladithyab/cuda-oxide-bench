@@ -1,0 +1,5 @@
+# Wave 18 Phase A: mojo-vecadd
+# Run-shape artifacts -- regenerable, but small enough to track if you want
+# to preserve evidence. Default: track run.log, ignore tmp.
+*.bin
+*.cubin
