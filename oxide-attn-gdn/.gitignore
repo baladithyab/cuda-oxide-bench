@@ -1,0 +1,6 @@
+target/
+*.cubin
+*.ll
+*.ltoir
+*.ptx
+*.npy
