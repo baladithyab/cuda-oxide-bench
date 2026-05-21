@@ -1,0 +1,53 @@
+[sweep] device: NVIDIA GeForce RTX 5090 (sm_120)  smem_optin=99 KB
+
+[sweep] ===== shape=qwen3_next_decode B=1 H=16 d_k=256 d_v=256  BV=64  n_blocks=64 =====
+[sweep] bytes/iter = 8224.06 KB   flops/iter = 6.291 MFLOPS
+[sweep] correctness: o max_abs=6.104e-05 (|want|max=3.308e-01) OK   S_out max_abs=2.980e-08 (|want|max=4.662e-01) OK
+[sweep] iter= 0 gpu_us=16.67 gbps=505.1 gflops=377.37
+[sweep] iter= 1 gpu_us=15.23 gbps=552.9 gflops=413.04
+[sweep] iter= 2 gpu_us=8.16 gbps=1032.0 gflops=771.01
+[sweep] iter=49 gpu_us=8.74 gbps=964.0 gflops=720.18
+[sweep] qwen3_next_decode SUMMARY  best=8.16us (1032.0 GB/s, 771.01 GFLOPS)  mean=9.13us (921.9 GB/s)  median=8.78us
+
+[sweep] ===== shape=tiny B=1 H=4 d_k=64 d_v=64  BV=64  n_blocks=4 =====
+[sweep] bytes/iter = 130.02 KB   flops/iter = 0.098 MFLOPS
+[sweep] correctness: o max_abs=0.000e+00 (|want|max=3.423e-01) OK   S_out max_abs=2.980e-08 (|want|max=5.377e-01) OK
+[sweep] iter= 0 gpu_us=6.27 gbps=21.2 gflops=15.67
+[sweep] iter= 1 gpu_us=4.26 gbps=31.3 gflops=23.10
+[sweep] iter= 2 gpu_us=5.63 gbps=23.6 gflops=17.45
+[sweep] iter=49 gpu_us=5.54 gbps=24.0 gflops=17.76
+[sweep] tiny SUMMARY  best=4.10us (32.5 GB/s, 24.00 GFLOPS)  mean=6.65us (20.0 GB/s)  median=5.10us
+
+[sweep] ===== shape=small B=1 H=8 d_k=128 d_v=128  BV=64  n_blocks=16 =====
+[sweep] bytes/iter = 1032.03 KB   flops/iter = 0.786 MFLOPS
+[sweep] correctness: o max_abs=1.526e-05 (|want|max=3.579e-01) OK   S_out max_abs=4.098e-08 (|want|max=4.809e-01) OK
+[sweep] iter= 0 gpu_us=6.78 gbps=155.8 gflops=115.92
+[sweep] iter= 1 gpu_us=4.90 gbps=215.8 gflops=160.63
+[sweep] iter= 2 gpu_us=6.78 gbps=155.8 gflops=115.92
+[sweep] iter=49 gpu_us=7.39 gbps=143.0 gflops=106.39
+[sweep] small SUMMARY  best=4.86us (217.3 GB/s, 161.68 GFLOPS)  mean=6.91us (153.0 GB/s)  median=6.67us
+
+[sweep] ===== shape=large B=4 H=64 d_k=256 d_v=256  BV=64  n_blocks=1024 =====
+[sweep] bytes/iter = 131585.00 KB   flops/iter = 100.663 MFLOPS
+[sweep] correctness: o max_abs=1.221e-04 (|want|max=4.827e-01) OK   S_out max_abs=5.960e-08 (|want|max=5.556e-01) OK
+[sweep] iter= 0 gpu_us=74.50 gbps=1808.7 gflops=1351.26
+[sweep] iter= 1 gpu_us=89.73 gbps=1501.7 gflops=1121.87
+[sweep] iter= 2 gpu_us=75.07 gbps=1794.9 gflops=1340.89
+[sweep] iter=49 gpu_us=82.30 gbps=1637.1 gflops=1223.07
+[sweep] large SUMMARY  best=74.50us (1808.7 GB/s, 1351.26 GFLOPS)  mean=79.93us (1685.8 GB/s)  median=80.00us
+
+[sweep] ===== shape=wide B=1 H=16 d_k=512 d_v=512  BV=32  n_blocks=256 =====
+[sweep] wide: D_K=512 > TMA boxDim cap (256). Single-tile TMA load is structurally impossible at this shape; would need per-CTA two-tile assembly. Skipping bench.
+
+====== W22.15 cuda-attn-gdn-tma sweep summary =================================
+shape                (B,H,d_k,d_v)          n_blocks  best_us   best_gbps best_gf ok       
+qwen3_next_decode    (1,16,256,256)         64        8.16      1032.0    771.01  PASS     
+tiny                 (1,4,64,64)            4         4.10      32.5      24.00   PASS     
+small                (1,8,128,128)          16        4.86      217.3     161.68  PASS     
+large                (4,64,256,256)         1024      74.50     1808.7    1351.26 PASS     
+wide                 (1,16,512,512)         256       —       —       —     TMA-NA   
+===============================================================================
+[sweep] CSV: results_sweep.csv  (one row per (shape, iter))
+[sweep] note: 'wide' shape (D_K=512) is unsupported by single-tile TMA
+[sweep]       (cuTensorMapEncodeTiled boxDim cap = 256). cuTile baseline
+[sweep]       still benches at this shape — see results_cutile_sweep.csv.

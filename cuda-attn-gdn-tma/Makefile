@@ -6,13 +6,16 @@ CXX  = clang-14
 NVCCFLAGS = -O3 -arch=sm_120 -ccbin $(CXX) -std=c++17 -lineinfo -lstdc++ -lm
 LDLIBS    = -lcuda
 
-all: attn_gdn_tma bench
+all: attn_gdn_tma bench bench_sweep
 
 attn_gdn_tma: attn_gdn_tma.cu
 	$(NVCC) $(NVCCFLAGS) -o $@ $< $(LDLIBS)
 
 bench: bench.cu attn_gdn_tma.cu
 	$(NVCC) $(NVCCFLAGS) -o $@ bench.cu $(LDLIBS)
+
+bench_sweep: bench_sweep.cu attn_gdn_tma.cu
+	$(NVCC) $(NVCCFLAGS) -o $@ bench_sweep.cu $(LDLIBS)
 
 # SASS dump — extract instruction-mix evidence per ADR-0004.
 # UTMALDG is the target signal (W22.10 hypothesis: nvcc-generated UTMALDG path).

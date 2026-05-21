@@ -24,6 +24,9 @@ cuda-attn-gdn-async-tpb128/attn_gdn_async_tpb128
 cuda-attn-gdn-async-tpb128/bench
 cuda-attn-gdn-tma/attn_gdn_tma
 cuda-attn-gdn-tma/bench
+cuda-attn-gdn-tma/bench_sweep
+cuda-attn-gdn-tma-warpspec/attn_gdn_tma_warpspec
+cuda-attn-gdn-tma-warpspec/bench
 cublas-attn-mla/attn_mla
 cublas-attn-mla/bench
 

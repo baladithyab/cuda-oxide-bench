@@ -1,0 +1,8 @@
+[gen] outputs → /home/codeseys/cuda-exploration/analysis/wave15-attention-architecture/inputs
+[gen] torch=2.11.0+cu130  cuda_avail=True
+[gen] device: NVIDIA GeForce RTX 5090
+[gen] tiny: B=1 H=4 d_k=64 d_v=64  state=0.07 MB
+[gen] small: B=1 H=8 d_k=128 d_v=128  state=0.52 MB
+[gen] large: B=4 H=64 d_k=256 d_v=256  state=67.11 MB
+[gen] wide: B=1 H=16 d_k=512 d_v=512  state=16.78 MB
+[gen] done.

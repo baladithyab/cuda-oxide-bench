@@ -1,4 +1,5 @@
-# Wave 22.5 -- mojo-attn-bf16: 3-kernel attention with bf16 matmul stages.
+# Wave 22.5b -- mojo-attn-bf16: 3-kernel attention with bf16 matmul stages,
+# scaled to DeepSeek-V3 decode shape and timed.
 #
 # Pipeline (mirrors cublas-attn-mla / cuda-attn-mla):
 #   Stage 1 (qkt_kernel):     scores = Q @ K^T              [B, n_h, S, S]   f32
@@ -10,11 +11,19 @@
 # mojo-matmul-bf16 pattern: TensorCore[bf16, bf16] for load_a/load_b fragments,
 # raw mma() with f32 accumulator, hand-rolled m16n8 epilogue.
 #
-# Correctness shape (this file, run inline against an inline numpy-like CPU
-# reference): B=1, n_h=4, S=128, qk=64, d_v=64. Bench shape (DeepSeek-V3 decode):
-# B=1, n_h=128, S=2048, qk=192, d_v=128 — orchestrator runs that separately.
+# W22.5  shape (correctness only): B=1, n_h=4,   S=128,  qk=64,  d_v=64.
+# W22.5b shape (this file, bench): B=1, n_h=128, S=2048, qk=192, d_v=128.
 #
 # Tile shape: BM=BN=64, BK=32, WM=WN=32, MMA=16x8x16. 4 warps/block, 128 threads.
+#
+# Shape-divisibility check (the orchestrator flagged qk=192 vs BK=32 as risky):
+#   192 / BK=32 = 6  ✓   (qkt K-iters)
+#   2048 / BM=64 = 32 ✓  (S → BM tile rows, both qkt and pv)
+#   2048 / BN=64 = 32 ✓  (S → BN tile cols on qkt)
+#   2048 / BK=32 = 64 ✓  (pv K-iters along S)
+#   128 / BN=64  = 2  ✓  (DV → BN tile cols on pv)
+# BK=32 divides everything cleanly; no tail-handler needed. Keep Wave 21 BK=32
+# tile shape unchanged.
 #
 # Pitfall vs Wave 21 matmul: Q@K^T needs K loaded with row/col swapped so that
 # MMA's K-dim (= matmul-K-dim = qk_head_dim) maps to the inner-row index of K.
@@ -427,7 +436,7 @@ def pv_kernel[
 
 
 # ============================================================================
-# Main: end-to-end correctness at small shape.
+# Main: end-to-end correctness + timed bench at DeepSeek-V3 decode shape.
 # ============================================================================
 def main() raises:
     comptime if not has_accelerator():
@@ -437,7 +446,7 @@ def main() raises:
     with DeviceContext() as ctx:
         print("GPU:", ctx.name())
 
-        # ---- Tile shape (Wave 21 pattern) ----
+        # ---- Tile shape (Wave 21 pattern, kept unchanged for W22.5b) ----
         comptime BM = 64
         comptime BN = 64
         comptime BK = 32
@@ -449,13 +458,21 @@ def main() raises:
         comptime NUM_WARPS = (BM // WM) * (BN // WN)
         comptime BLOCK_THREADS = NUM_WARPS * WARP_SIZE  # 128
 
-        # ---- Problem shape: B=1, n_h=4, S=128, qk=64, d_v=64 (correctness). ----
+        # ---- Problem shape: DeepSeek-V3 decode (B=1, n_h=128, S=2048, qk=192, d_v=128). ----
         # All multiples of BM/BN/BK so no boundary guards needed.
+        # Memory budget on RTX 5090 (32 GiB):
+        #   Q, K bf16:  BH*S*QK *2 = 128*2048*192*2 = 100 MiB each
+        #   V    bf16:  BH*S*DV *2 = 128*2048*128*2 =  64 MiB
+        #   S    f32 :  BH*S*S  *4 = 128*2048*2048*4 = 2.0 GiB
+        #   P    bf16:  BH*S*S  *2 = 128*2048*2048*2 = 1.0 GiB
+        #   O    f32 :  BH*S*DV *4 = 128*2048*128*4 = 128 MiB
+        #   Plus host mirrors of Q,K,V,O (~390 MiB).
+        # Total ≈ 3.5 GiB device + 0.4 GiB host. Well under 32 GiB.
         comptime B = 1
-        comptime NH = 4
-        comptime S = 128
-        comptime QK = 64
-        comptime DV = 64
+        comptime NH = 128
+        comptime S = 2048
+        comptime QK = 192
+        comptime DV = 128
         comptime BH = B * NH
         comptime QK_ELEMS = BH * S * QK
         comptime V_ELEMS  = BH * S * DV
@@ -503,34 +520,31 @@ def main() raises:
         var P_lt = LayoutTensor[DType.bfloat16, layout_p, MutAnyOrigin](p_dev.unsafe_ptr())
         var O_lt = LayoutTensor[DType.float32,  layout_o, MutAnyOrigin](o_dev.unsafe_ptr())
 
-        # ---- Stage 1: Q @ K^T -> S_lt (f32 scores, no scale yet). ----
+        # ---- Kernel handles ----
         comptime kernel_qkt = qkt_kernel[
             layout_q, layout_k, layout_s,
             BM, BN, BK, WM, WN, MMA_M, MMA_N, MMA_K,
             S, QK,
         ]
-        ctx.enqueue_function[kernel_qkt, kernel_qkt, _dump_sass=True](
-            Q_lt, K_lt, S_lt,
-            grid_dim=(ceildiv(S, BN), ceildiv(S, BM), BH),
-            block_dim=(BLOCK_THREADS,),
-        )
-
-        # ---- Stage 2: softmax(S * 1/sqrt(QK)) -> P (bf16). ----
-        # Grid = (BH * S, 1, 1): one block per (head-row).
         comptime kernel_sm = softmax_kernel[layout_s, layout_p, S]
-        var scale: Float32 = 1.0 / sqrt(Float32(QK))
-        ctx.enqueue_function[kernel_sm, kernel_sm](
-            S_lt, P_lt, scale,
-            grid_dim=(BH * S,),
-            block_dim=(SOFTMAX_TPB,),
-        )
-
-        # ---- Stage 3: P @ V -> O (f32). ----
         comptime kernel_pv = pv_kernel[
             layout_p, layout_v, layout_o,
             BM, BN, BK, WM, WN, MMA_M, MMA_N, MMA_K,
             S, DV,
         ]
+        var scale: Float32 = 1.0 / sqrt(Float32(QK))
+
+        # ---- Warmup launch (also captures SASS for the matmul kernels) ----
+        ctx.enqueue_function[kernel_qkt, kernel_qkt, _dump_sass=True](
+            Q_lt, K_lt, S_lt,
+            grid_dim=(ceildiv(S, BN), ceildiv(S, BM), BH),
+            block_dim=(BLOCK_THREADS,),
+        )
+        ctx.enqueue_function[kernel_sm, kernel_sm](
+            S_lt, P_lt, scale,
+            grid_dim=(BH * S,),
+            block_dim=(SOFTMAX_TPB,),
+        )
         ctx.enqueue_function[kernel_pv, kernel_pv, _dump_sass=True](
             P_lt, V_lt, O_lt,
             grid_dim=(ceildiv(DV, BN), ceildiv(S, BM), BH),
@@ -538,16 +552,56 @@ def main() raises:
         )
         ctx.synchronize()
 
-        # ---- Copy back. ----
+        # ---- Timed run: 10 per-iter ctx.execution_time samples -> median. ----
+        # @parameter def body re-enqueues all 3 kernels per iter; cudaEvent
+        # bracket spans the full pipeline (qkt + softmax + pv) on the stream.
+        @parameter
+        def body(ctx: DeviceContext) raises -> None:
+            ctx.enqueue_function[kernel_qkt, kernel_qkt](
+                Q_lt, K_lt, S_lt,
+                grid_dim=(ceildiv(S, BN), ceildiv(S, BM), BH),
+                block_dim=(BLOCK_THREADS,),
+            )
+            ctx.enqueue_function[kernel_sm, kernel_sm](
+                S_lt, P_lt, scale,
+                grid_dim=(BH * S,),
+                block_dim=(SOFTMAX_TPB,),
+            )
+            ctx.enqueue_function[kernel_pv, kernel_pv](
+                P_lt, V_lt, O_lt,
+                grid_dim=(ceildiv(DV, BN), ceildiv(S, BM), BH),
+                block_dim=(BLOCK_THREADS,),
+            )
+
+        var num_iters = 10
+        var iter_ms = SIMD[DType.float64, 16](0.0)
+        for it in range(num_iters):
+            var t = ctx.execution_time[body](1)
+            iter_ms[it] = Float64(t) / 1e6  # ns -> ms
+        ctx.synchronize()
+
+        # Insertion sort iter_ms[0:num_iters] for median.
+        for ii in range(1, num_iters):
+            var key = iter_ms[ii]
+            var jj = ii - 1
+            while jj >= 0 and iter_ms[jj] > key:
+                iter_ms[jj + 1] = iter_ms[jj]
+                jj -= 1
+            iter_ms[jj + 1] = key
+        var median_ms = iter_ms[num_iters // 2]
+        var min_ms = iter_ms[0]
+        var max_ms_iter = iter_ms[num_iters - 1]
+
+        # ---- Copy back final iteration's output for correctness check. ----
         ctx.enqueue_copy(dst_buf=o_host, src_buf=o_dev)
         ctx.synchronize()
 
         # =====================================================================
         # CPU reference: SDPA (no mask). Sample-based correctness check.
-        # For each sampled (bh, i, d) output element:
-        #   1. Compute full row scores[i, :] = Q[bh, i, :] @ K[bh, :, :]^T * scale
-        #   2. Softmax over j -> probs[i, :]
-        #   3. out[i, d] = sum_j probs[i, j] * V[bh, j, d]
+        # 1024 samples, tolerance atol=1e-2 + rtol=1e-3*|ref| (Wave 21 spec).
+        # Per sample: full row Q@K^T (S*QK ≈ 393K mult-adds) + softmax (3*S) +
+        #             reduce-with-V (S mult-adds). 1024 samples ≈ 400M ops in
+        #             interpreted Mojo — runs in a few seconds.
         # =====================================================================
         var max_err: Float32 = 0.0
         var max_rel_err: Float32 = 0.0
@@ -557,18 +611,15 @@ def main() raises:
         var fail_got: Float32 = 0.0
         var fail_ref: Float32 = 0.0
 
-        # Sample 256 output positions across (bh, i, d). Use Knuth golden-ratio hash.
-        var num_samples = 256
+        var num_samples = 1024
         for s_idx in range(num_samples):
+            # Knuth golden-ratio hash. Use disjoint high-bit windows for bh, i, d.
             var seed = s_idx * 2654435761
             var bh   = (((seed >> 24) % BH) + BH) % BH
-            var i    = (((seed >> 16) % S)  + S)  % S
-            var d    = (((seed >> 8)  % DV) + DV) % DV
+            var i    = (((seed >> 11) % S)  + S)  % S
+            var d    = (((seed >> 4)  % DV) + DV) % DV
 
-            # Compute full row scores[i, j] for j in [0, S) (bh fixed).
-            # Need a flat array of S floats for the row. We can't stack-alloc that
-            # at host-Python-level without comptime, but Mojo arrays in main are OK.
-            # Use a fixed-size SIMD or InlineArray of length S=128.
+            # Compute full row scores[j] = Q[bh, i, :] . K[bh, j, :] * scale.
             var row_scores = InlineArray[Float32, S](fill=0.0)
             for j in range(S):
                 var sj: Float32 = 0.0
@@ -578,7 +629,7 @@ def main() raises:
                     sj += qv * kv
                 row_scores[j] = sj * scale
 
-            # Softmax.
+            # Softmax over j.
             var rmax: Float32 = -3.4e38
             for j in range(S):
                 if row_scores[j] > rmax:
@@ -593,8 +644,8 @@ def main() raises:
             for j in range(S):
                 probs[j] = probs[j] * inv_sum
 
-            # Reduce probs (cast through bf16 to match the kernel's intermediate
-            # dtype) against V[bh, :, d].
+            # Cast probs through bf16 (matches kernel's intermediate dtype) and
+            # reduce against V[bh, :, d].
             var refv: Float32 = 0.0
             for j in range(S):
                 var pj = probs[j].cast[DType.bfloat16]().cast[DType.float32]()
@@ -611,7 +662,8 @@ def main() raises:
                 max_err = abs_err
             if rel_err > max_rel_err:
                 max_rel_err = rel_err
-            if abs_err > 1e-2 + 1e-2 * ref_abs and fail_bh < 0:
+            # Tolerance: atol=1e-2 + rtol=1e-3*|ref| (Wave 21 / Phase-7 spec).
+            if abs_err > 1e-2 + 1e-3 * ref_abs and fail_bh < 0:
                 fail_bh = bh
                 fail_i = i
                 fail_d = d
@@ -619,13 +671,41 @@ def main() raises:
                 fail_ref = refv
 
         # ---- Report. ----
+        # FLOPs per iter (per Wave 17 W1a / ADR-0005 useful_flops convention):
+        #   2 * B * n_h * S^2 * (qk + d_v)
+        # = 2 * 1 * 128 * 2048^2 * (192 + 128)
+        # = 2 * 128 * 4194304 * 320
+        # = 343,597,383,680 = 343.6 GFLOPS
+        var flops_per_iter: Float64 = (
+            2.0 * Float64(B) * Float64(NH) * Float64(S) * Float64(S)
+            * (Float64(QK) + Float64(DV))
+        )
+        var median_s: Float64 = median_ms * 1e-3
+        var min_s: Float64 = min_ms * 1e-3
+        var tflops_median: Float64 = flops_per_iter / median_s / 1e12
+        var tflops_best: Float64 = flops_per_iter / min_s / 1e12
+
         print("[mojo-attn-bf16] shape: B=", B, " n_h=", NH, " S=", S, " qk=", QK, " d_v=", DV)
         print("[mojo-attn-bf16] tile: BM=", BM, " BN=", BN, " BK=", BK,
               " MMA=", MMA_M, "x", MMA_N, "x", MMA_K)
+        print("[mojo-attn-bf16] flops_per_iter=", flops_per_iter / 1e9, " GFLOPS")
+        print("[mojo-attn-bf16] timing: min_ms=", min_ms,
+              " median_ms=", median_ms,
+              " max_ms=", max_ms_iter)
+        print("[mojo-attn-bf16] TFLOPS_median=", tflops_median,
+              " TFLOPS_best=", tflops_best)
         print("[mojo-attn-bf16] correctness: max_abs_err=", max_err,
               " max_rel_err=", max_rel_err, " (vs CPU SDPA ref, ", num_samples, " samples)")
         if fail_bh >= 0:
             print("[mojo-attn-bf16] FAIL at (bh=", fail_bh, " i=", fail_i, " d=", fail_d,
                   "): got=", fail_got, " ref=", fail_ref)
         else:
-            print("[mojo-attn-bf16] correctness PASSED at small shape")
+            print("[mojo-attn-bf16] correctness PASSED at deepseek_v3 shape (1024 samples)")
+
+        # Cross-frontend MLA comparison (Wave 17 W1a):
+        print("[mojo-attn-bf16] cross-frontend MLA at this shape:")
+        print("[mojo-attn-bf16]   cuTile-MLA      = 112.00 TF (fused, FlashAttention-class)")
+        print("[mojo-attn-bf16]   cublas-attn-mla =  47.00 TF (3-kernel, cuBLAS GEMMs)")
+        print("[mojo-attn-bf16]   oxide-attn-mla  =  24.70 TF (3-kernel, hand-WMMA)")
+        print("[mojo-attn-bf16]   cuda-attn-mla   =  24.17 TF (3-kernel, hand-WMMA)")
+        print("[mojo-attn-bf16]   mojo-attn-bf16  =  ", tflops_median, " TF (3-kernel, hand-MMA, this run, median)")

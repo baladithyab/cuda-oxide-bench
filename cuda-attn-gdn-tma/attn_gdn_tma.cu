@@ -524,8 +524,24 @@ static void launch_gdn_dispatch(const GDNShape& sh,
                                 const float*  dS_in, float* dS_out, __half* dO,
                                 cudaStream_t stream)
 {
+    // Wave 22.10 supported only the qwen3_next_decode shape (d_k=d_v=256).
+    // Wave 22.15 adds the sweep shapes: tiny (64/64), small (128/128),
+    // large (256/256, same template as qwen3_next_decode).
+    //
+    // BLOCK_V picker matches the cuTile-side `pick_block_v` policy: keep
+    // the (D_K × BLOCK_V) f32 state tile ≤ 64 KB so it fits comfortably
+    // in dynamic shared memory after the q/k/bar overhead. For D_K ≤ 256
+    // BLOCK_V=64 is fine.
+    //
+    // 'wide' (D_K=512) is intentionally NOT instantiated here. The single-
+    // tile TMA descriptor (boxDim ≤ 256) cannot cover a 512-row slab — see
+    // bench_sweep.cu for the explicit skip + comment. Splitting D_K=512
+    // into two TMAs would require a kernel-body refactor that this cell
+    // is explicitly forbidden from making.
     if (sh.d_k == 64 && sh.d_v == 64) {
         launch_gdn_tma<64, 64>(sh, dQ, dK, dV, dA, dB, dS_in, dS_out, dO, stream);
+    } else if (sh.d_k == 128 && sh.d_v == 128) {
+        launch_gdn_tma<128, 64>(sh, dQ, dK, dV, dA, dB, dS_in, dS_out, dO, stream);
     } else if (sh.d_k == 256 && sh.d_v == 256) {
         launch_gdn_tma<256, 64>(sh, dQ, dK, dV, dA, dB, dS_in, dS_out, dO, stream);
     } else {

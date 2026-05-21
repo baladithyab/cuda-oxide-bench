@@ -1,0 +1,10 @@
+attn_gdn_tma_warpspec
+bench
+*.sass
+*.cubin
+*.ptx
+*.o
+build.log
+run.log
+sass.log
+results.csv
