@@ -20,6 +20,8 @@ cuda-attn-gdn/attn_gdn
 cuda-attn-gdn/bench
 cuda-attn-gdn-async/attn_gdn_async
 cuda-attn-gdn-async/bench
+cuda-attn-gdn-async-tpb128/attn_gdn_async_tpb128
+cuda-attn-gdn-async-tpb128/bench
 cublas-attn-mla/attn_mla
 cublas-attn-mla/bench
 

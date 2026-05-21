@@ -1,0 +1,9 @@
+# build artifacts
+attn_gdn_async_tpb128
+bench
+*.sass
+*.log
+*.csv
+*.o
+*.cubin
+*.ptx
