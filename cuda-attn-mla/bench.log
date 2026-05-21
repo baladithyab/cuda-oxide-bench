@@ -1,0 +1,46 @@
+[run.sh] === build ===
+make: 'attn_mla' is up to date.
+[run.sh] === correctness + bench setup banner ===
+[mla] device: NVIDIA GeForce RTX 5090 (sm_120)
+[mla] inputs dir: /home/codeseys/cuda-exploration/analysis/wave15-attention-architecture/inputs
+[mla] === correctness run (B=1 n_h=4 S=128 qk=96 d_v=64) ===
+[mla] correctness_mla qk=96 (qk_eff=96, native) -> max_abs_err=1.597e-04 max_rel=7.271e+00 expected_max_abs=3.039e-01
+[mla] correctness_mla qk=96 (qk_eff=128, padded) -> max_abs_err=1.597e-04 max_rel=7.271e+00 expected_max_abs=3.039e-01
+[mla] correctness: native=1.597e-04 (OK)  padded=1.597e-04 (OK)  TOL=1e-02
+
+[mla] === bench setup (B=1 n_h=128 S=2048 qk=192 d_v=128) ===
+[mla] useful_flops = 343.597 GFLOPS  (qk=192, qk+d_v=320)
+[mla] padded_flops = 412.317 GFLOPS  (qk_pad=256, padding overhead=20.0%)
+[mla] DRAM K-traffic (per pass): native=100.7 MB  padded=134.2 MB  delta=33.3%
+
+[mla] -- variant=native qk_eff=192 --
+[mla] native iter=0 gpu_ms=15.3259 useful_TF=22.42 padded_TF=26.90
+[mla] native iter=1 gpu_ms=15.1896 useful_TF=22.62 padded_TF=27.14
+[mla] native iter=2 gpu_ms=14.3528 useful_TF=23.94 padded_TF=28.73
+[mla] native iter=3 gpu_ms=14.2582 useful_TF=24.10 padded_TF=28.92
+[mla] native iter=4 gpu_ms=14.2171 useful_TF=24.17 padded_TF=29.00
+[mla] native iter=5 gpu_ms=14.2373 useful_TF=24.13 padded_TF=28.96
+[mla] native iter=6 gpu_ms=14.6267 useful_TF=23.49 padded_TF=28.19
+[mla] native iter=7 gpu_ms=14.4476 useful_TF=23.78 padded_TF=28.54
+[mla] native iter=8 gpu_ms=14.2850 useful_TF=24.05 padded_TF=28.86
+[mla] native iter=9 gpu_ms=14.4606 useful_TF=23.76 padded_TF=28.51
+[mla] native SUMMARY best_ms=14.2171 avg_ms=14.5401 best_useful_TF=24.17 best_padded_TF=29.00
+
+[mla] -- variant=padded qk_eff=256 --
+[mla] padded iter=0 gpu_ms=16.8596 useful_TF=20.38 padded_TF=24.46
+[mla] padded iter=1 gpu_ms=16.6190 useful_TF=20.67 padded_TF=24.81
+[mla] padded iter=2 gpu_ms=16.5870 useful_TF=20.71 padded_TF=24.86
+[mla] padded iter=3 gpu_ms=16.7771 useful_TF=20.48 padded_TF=24.58
+[mla] padded iter=4 gpu_ms=16.1619 useful_TF=21.26 padded_TF=25.51
+[mla] padded iter=5 gpu_ms=16.4234 useful_TF=20.92 padded_TF=25.11
+[mla] padded iter=6 gpu_ms=17.4283 useful_TF=19.71 padded_TF=23.66
+[mla] padded iter=7 gpu_ms=16.5088 useful_TF=20.81 padded_TF=24.98
+[mla] padded iter=8 gpu_ms=16.6281 useful_TF=20.66 padded_TF=24.80
+[mla] padded iter=9 gpu_ms=16.1129 useful_TF=21.32 padded_TF=25.59
+[mla] padded SUMMARY best_ms=16.1129 avg_ms=16.6106 best_useful_TF=21.32 best_padded_TF=25.59
+[run.sh] === SASS dump (HMMA / FFMA / LDG sanity) ===
+[run.sh] HMMA count: 20
+[run.sh] FFMA count: 104
+[run.sh] MUFU count: 27
+[run.sh] LDG.E count: 129
+[run.sh] LDG.E.128 count: 0

@@ -26,6 +26,10 @@ cublas-attn-mla/bench
 *.so
 *.obj
 
+# Python cache (rebuild on import)
+__pycache__/
+*.pyc
+
 # Editor / OS
 .DS_Store
 .idea/
